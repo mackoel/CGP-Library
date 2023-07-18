@@ -229,6 +229,8 @@ extern "C" {
 	void runOnTest(struct chromosome *chromo, char* test_filename,char* error_filename, struct parameters *params);
 	void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data, double levelCoeff);
 
+	void updateDataSetOutput(struct dataSet *data, const double* array, double levelCoeff);
+
 	void getResult(struct dataSet *data, double* errors, struct chromosome *chromo/*, int currentSNPcolumn*/, double levelCoeff);
 	int getDataSetNumSamples(struct dataSet *data);
 	void loadConstants(struct chromosome *chromo, char* filename);
@@ -1926,6 +1928,53 @@ extern "C" {
 			<repeatCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeChromosome>
 	*/
 	DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *data, int numGens);
+
+
+	/*
+		Function: rerunCGP
+
+		Applies CGP to the given task injecting an given chromosome.
+
+		Returns the best chromosome found after applying CGP to a given task using the specified <parameters>. Depending upon the update frequency given in <parameters> (<setUpdateFrequency>) the progress made by CGP will be displayed in the terminal.
+
+		Note:
+			As runCGP returns an initialised chromosome this should later be free'd using <freeChromosome>.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			data - pointer to dataSet structure.
+			gens - the number of allowed generations before terminating the search.
+			chromo - chromosome to inject.
+
+		Returns:
+			A pointer to an initialised chromosome.
+
+		Example:
+
+			(begin code)
+			struct parameters *params;
+			struct dataSet *data;
+			struct chromosome *chromo;
+
+			params = initialiseParameters(a,b,c,d);
+			addNodeFunction(params, "aaa,bbb,ccc");
+
+			data = initialiseDataSetFromFile("file");
+
+			chromo = runCGP(params, data, 100);
+
+			chromo = rerunCGP(params, data, 100, chromo);
+
+			freeParameters(params);
+			freeDataSet(data);
+			freeChromosome(chromo);
+			(end)
+
+
+		See Also:
+			<repeatCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeChromosome>
+	*/
+	DLL_EXPORT struct chromosome* rerunCGP(struct parameters *params, struct dataSet *data, int numGens, struct chromosome* chromo);
 
 
 	/*

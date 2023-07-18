@@ -1220,6 +1220,15 @@ void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct 
 	
 }
 
+void updateDataSetOutput(struct dataSet *data, const double* array, double levelCoeff) {
+	for (int i = 0; i < getNumDataSetSamples(data); i++) {
+		data->outputData[i][0] -= levelCoeff * array[i];
+	}
+}
+
+/*
+	Calculates prediction for data into errors
+*/
 
 void getResult(struct dataSet *data, double* errors, struct chromosome *chromo/*, int currentSNPcolumn*/, double levelCoeff) {
 
@@ -3668,6 +3677,193 @@ DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *
 
 	return bestChromo;
 }
+
+
+DLL_EXPORT struct chromosome* rerunCGP(struct parameters *params, struct dataSet *data, int numGens, struct chromosome* chromo) {
+
+	int i;
+	int gen;
+
+	/* bestChromo found using runCGP */
+	struct chromosome *bestChromo;
+
+	/* arrays of the parents and children */
+	struct chromosome **parentChromos;
+	struct chromosome **childrenChromos;
+
+	/* storage for chromosomes used by selection scheme */
+	struct chromosome **candidateChromos;
+	int numCandidateChromos;
+
+	/* error checking */
+	if (numGens < 0) {
+		printf("Error: %d generations is invalid. The number of generations must be >= 0.\n Terminating CGP-Library.\n", numGens);
+		exit(0);
+	}
+
+	if (data != NULL && params->numInputs != data->numInputs) {
+		printf("Error: The number of inputs specified in the dataSet (%d) does not match the number of inputs specified in the parameters (%d).\n", data->numInputs, params->numInputs);
+		printf("Terminating CGP-Library.\n");
+		exit(0);
+	}
+
+	if (data != NULL && params->numOutputs != data->numOutputs) {
+		printf("Error: The number of outputs specified in the dataSet (%d) does not match the number of outputs specified in the parameters (%d).\n", data->numOutputs, params->numOutputs);
+		printf("Terminating CGP-Library.\n");
+		exit(0);
+	}
+
+	/* initialise parent chromosomes */
+	parentChromos = (struct chromosome**)malloc(params->mu * sizeof(struct chromosome*));
+
+	for (i = 0; i < params->mu; i++) {
+		parentChromos[i] = initialiseChromosome(params);
+	}
+
+	copyChromosome(parentChromos[0], chromo);
+
+	/* initialise children chromosomes */
+	childrenChromos = (struct chromosome**)malloc(params->lambda * sizeof(struct chromosome*));
+
+	for (i = 0; i < params->lambda; i++) {
+		childrenChromos[i] = initialiseChromosome(params);
+	}
+
+	copyChromosome(childrenChromos[0], chromo);
+
+	/* intilise best chromosome */
+	bestChromo = initialiseChromosome(params);
+
+	/* determine the size of the Candidate Chromos based on the evolutionary Strategy */
+	if (params->evolutionaryStrategy == '+') {
+		numCandidateChromos = params->mu + params->lambda;
+	}
+	else if (params->evolutionaryStrategy == ',') {
+		numCandidateChromos = params->lambda;
+	}
+	else {
+		printf("Error: the evolutionary strategy '%c' is not known.\nTerminating CGP-Library.\n", params->evolutionaryStrategy);
+		exit(0);
+	}
+
+	/* initialise the candidateChromos */
+	candidateChromos = (struct chromosome**)malloc(numCandidateChromos * sizeof(struct chromosome*));
+
+	for (i = 0; i < numCandidateChromos; i++) {
+		candidateChromos[i] = initialiseChromosome(params);
+	}
+
+	/* set fitness of the parents */
+	for (i = 0; i < params->mu; i++) {
+		setChromosomeFitness(params, parentChromos[i], data);
+	}
+
+	/* show the user whats going on */
+	if (params->updateFrequency != 0) {
+		printf("\n-- Starting CGP --\n\n");
+		printf("Gen\tfitness\n");
+	}
+
+	/* for each generation */
+	for (gen = 0; gen < numGens; gen++) {
+
+		/* set fitness of the children of the population */
+#pragma omp parallel for default(none), shared(params, childrenChromos,data), schedule(dynamic), num_threads(params->numThreads)
+		for (i = 0; i < params->lambda; i++) {
+			setChromosomeFitness(params, childrenChromos[i], data);
+		}
+
+		/* get best chromosome */
+		getBestChromosome(parentChromos, childrenChromos, params->mu, params->lambda, bestChromo);
+
+		/* check termination conditions */
+		if (getChromosomeFitness(bestChromo) <= params->targetFitness) {
+
+			if (params->updateFrequency != 0) {
+				printf("%d\t%f - Solution Found\n", gen, bestChromo->fitness);
+			}
+
+			break;
+		}
+
+		/* display progress to the user at the update frequency specified */
+		if (params->updateFrequency != 0 && (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
+			printf("%d\t%f\t  0: %f \t", gen, bestChromo->fitness, bestChromo->sigmaConstants[0]);
+			for (int l = 1; l < bestChromo->numInputs; l++)
+				printf("%i: %f \t", l, bestChromo->sigmaConstants[l]);
+			printf("\n");
+		}
+
+		/*
+			Set the chromosomes which will be used by the selection scheme
+			dependant upon the evolutionary strategy. i.e. '+' all are used
+			by the selection scheme, ',' only the children are.
+		*/
+		if (params->evolutionaryStrategy == '+') {
+
+			/*
+				Note: the children are placed before the parents to
+				ensure 'new blood' is always selected over old if the
+				fitness are equal.
+			*/
+
+			for (i = 0; i < numCandidateChromos; i++) {
+
+				if (i < params->lambda) {
+					copyChromosome(candidateChromos[i], childrenChromos[i]);
+				}
+				else {
+					copyChromosome(candidateChromos[i], parentChromos[i - params->lambda]);
+				}
+			}
+		}
+		else if (params->evolutionaryStrategy == ',') {
+
+			for (i = 0; i < numCandidateChromos; i++) {
+				copyChromosome(candidateChromos[i], childrenChromos[i]);
+			}
+		}
+
+		/* select the parents from the candidateChromos */
+		params->selectionScheme(params, parentChromos, candidateChromos, params->mu, numCandidateChromos);
+
+		/* create the children from the parents */
+		params->reproductionScheme(params, parentChromos, childrenChromos, params->mu, params->lambda);
+	}
+
+	/* deal with formatting for displaying progress */
+	if (params->updateFrequency != 0) {
+		printf("\n");
+	}
+
+	/* copy the best best chromosome */
+	bestChromo->generation = gen;
+	/*copyChromosome(chromo, bestChromo);*/
+
+	/* free parent chromosomes */
+	for (i = 0; i < params->mu; i++) {
+		freeChromosome(parentChromos[i]);
+	}
+	free(parentChromos);
+
+	/* free children chromosomes */
+	for (i = 0; i < params->lambda; i++) {
+		freeChromosome(childrenChromos[i]);
+	}
+	free(childrenChromos);
+
+	/* free the used chromosomes and population */
+	for (i = 0; i < numCandidateChromos; i++) {
+		freeChromosome(candidateChromos[i]);
+	}
+	free(candidateChromos);
+
+	copyChromosome(chromo, bestChromo);
+	freeChromosome(bestChromo);
+
+	return chromo;
+}
+
 
 /*
 	returns a pointer to the fittest chromosome in the two arrays of chromosomes
