@@ -2,18 +2,18 @@
 	This file is part of CGP-Library
 	Copyright (c) Andrew James Turner 2014, 2015 (andrew.turner@york.ac.uk)
 
-    CGP-Library is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	CGP-Library is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published
+	by the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    CGP-Library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
+	CGP-Library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with CGP-Library. If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Lesser General Public License
+	along with CGP-Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
@@ -66,1926 +66,1933 @@ extern "C" {
 #endif
 
 
-/*
-	Title: Structures
+	/*
+		Title: Structures
 
-	Description of all the structures used by CGP-Library.
-*/
+		Description of all the structures used by CGP-Library.
+	*/
 
-/*
-	variable: parameters
+	/*
+		variable: parameters
 
-	Stores general evolutionary and chromosome <parameters> used by the CGP-Library.
+		Stores general evolutionary and chromosome <parameters> used by the CGP-Library.
 
-	The <parameters> structure is used extensively by the CGP-Library
-	and controls every aspect of the evolutionary algorithm and solution structure.
+		The <parameters> structure is used extensively by the CGP-Library
+		and controls every aspect of the evolutionary algorithm and solution structure.
 
-	The values stored in <parameters> are set to default values when
-	initialised using <initialiseParameters>. These default values can then be
-	altered using provided setter functions.
+		The values stored in <parameters> are set to default values when
+		initialised using <initialiseParameters>. These default values can then be
+		altered using provided setter functions.
 
-	Defaults:
+		Defaults:
 
-		Default parameter values.
+			Default parameter values.
 
-		> mu:								1
-		> lambda:							4
-		> evolutionary strategy:			+
-		> mutation rate:					0.05
-		> Recurrent Connection Probability	0.00
-		> Shortcut Connections				1
-		> connection weight range:			1
-		> update frequency:					1
-		> mutation type:					probabilistic
-		> fitness function: 				supervisedLearning
-		> selection scheme:					selectFittest
-		> reproduction scheme:				mutateRandomParent
-		> number of threads 				1
+			> mu:								1
+			> lambda:							4
+			> evolutionary strategy:			+
+			> mutation rate:					0.05
+			> Recurrent Connection Probability	0.00
+			> Shortcut Connections				1
+			> connection weight range:			1
+			> update frequency:					1
+			> mutation type:					probabilistic
+			> fitness function: 				supervisedLearning
+			> selection scheme:					selectFittest
+			> reproduction scheme:				mutateRandomParent
+			> number of threads 				1
 
-		- Mu, lambda and evolutionary strategy control the type and
-		parameter values of the evolutionary strategy used. See
-		<setMu>, <setLambda> and <setEvolutionaryStrategy>.
+			- Mu, lambda and evolutionary strategy control the type and
+			parameter values of the evolutionary strategy used. See
+			<setMu>, <setLambda> and <setEvolutionaryStrategy>.
 
-		- The mutation rate controls the level of mutation when
-		creating a child solution from a parent. See <setMutationRate>.
+			- The mutation rate controls the level of mutation when
+			creating a child solution from a parent. See <setMutationRate>.
 
-		- The recurrent connection probability controls the probability
-		of connections being made recurrent when mutating connection
-		genes. For regular acyclic feed-forward programs leave as zero.
-		For recurrent programs see <setRecurrentConnectionProbability>.
+			- The recurrent connection probability controls the probability
+			of connections being made recurrent when mutating connection
+			genes. For regular acyclic feed-forward programs leave as zero.
+			For recurrent programs see <setRecurrentConnectionProbability>.
 
-		- The shortcut connections controls whether program outputs can
-		connect directly to program inputs. 1 (yes) and 0 (no).
-		See <setShortcutConnections>
+			- The shortcut connections controls whether program outputs can
+			connect directly to program inputs. 1 (yes) and 0 (no).
+			See <setShortcutConnections>
 
-		- The connection weight range controls the range of values
-		which the connection weights can take. Connection weights
-		are only considered when the CGP-Library is used to evolve
-		artificial neural networks. See <setConnectionWeightRange>.
+			- The connection weight range controls the range of values
+			which the connection weights can take. Connection weights
+			are only considered when the CGP-Library is used to evolve
+			artificial neural networks. See <setConnectionWeightRange>.
 
-		- The update frequency controls the frequency of updates to
-		the terminal when using <runCGP>. The value is the number
-		of generations between updates. See <setUpdateFrequency>.
+			- The update frequency controls the frequency of updates to
+			the terminal when using <runCGP>. The value is the number
+			of generations between updates. See <setUpdateFrequency>.
 
-		- The mutation type stores the mutation method used when
-		mutating chromosomes. See <setMutationType>.
+			- The mutation type stores the mutation method used when
+			mutating chromosomes. See <setMutationType>.
 
-		- The fitness function stores the fitness function used when
-		assigning a fitness to the chromosomes. See <setCustomFitnessFunction>.
+			- The fitness function stores the fitness function used when
+			assigning a fitness to the chromosomes. See <setCustomFitnessFunction>.
 
-		- The selection scheme stores the selection scheme used when
-		selecting the parents from the candidate chromosomes. See
-		<setCustomSelectionScheme>.
+			- The selection scheme stores the selection scheme used when
+			selecting the parents from the candidate chromosomes. See
+			<setCustomSelectionScheme>.
 
-		- The reproduction scheme stores how children
-		chromosomes are created from their parents. See
-		<setCustomReproductionScheme>.
+			- The reproduction scheme stores how children
+			chromosomes are created from their parents. See
+			<setCustomReproductionScheme>.
 
-		- The number of threads defines how many threads the CGP library
-		will use internally. See <setNumThreads>.
+			- The number of threads defines how many threads the CGP library
+			will use internally. See <setNumThreads>.
 
-	See Also:
-		<initialiseParameters>, <freeParameters>, <printParameters>
-*/
-struct parameters;
+		See Also:
+			<initialiseParameters>, <freeParameters>, <printParameters>
+	*/
+	struct parameters;
 
-/*
-	variable: chromosome
+	/*
+		variable: chromosome
 
-	Stores a CGP chromosome instances used by the CGP-Library.
+		Stores a CGP chromosome instances used by the CGP-Library.
 
-	See Also:
-		<initialiseChromosome>, <initialiseChromosomeFromFile> <freeChromosome>, <printChromosome>, <executeChromosome>, <mutateChromosome>
+		See Also:
+			<initialiseChromosome>, <initialiseChromosomeFromFile> <freeChromosome>, <printChromosome>, <executeChromosome>, <mutateChromosome>
 
-*/
-struct chromosome;
+	*/
+	struct chromosome;
 
-/*
-	variable: dataSet
+	/*
+		variable: dataSet
 
-	Stores a data set which can be used by fitness functions when calculating a chromosomes fitness.
+		Stores a data set which can be used by fitness functions when calculating a chromosomes fitness.
 
-	Typically contains input output pairs of data used when applying CGP to supervised learning tasks.
+		Typically contains input output pairs of data used when applying CGP to supervised learning tasks.
 
-	See Also:
-		<initialiseDataSetFromFile>, <initialiseDataSetFromArrays>, <freeDataSet>, <printDataSet>
-*/
-struct dataSet;
+		See Also:
+			<initialiseDataSetFromFile>, <initialiseDataSetFromArrays>, <freeDataSet>, <printDataSet>
+	*/
+	struct dataSet;
 
-/*
-	variable: results
+	/*
+		variable: results
 
-	Stores the best chromosome found on each run when using <repeatCGP>
+		Stores the best chromosome found on each run when using <repeatCGP>
 
-	See Also:
+		See Also:
 
-		<repeatCGP>, <freeResults>, <getChromosome>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
+			<repeatCGP>, <freeResults>, <getChromosome>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
 
-*/
-struct results;
+	*/
+	struct results;
 
 
 
-/*
-	Title: Parameters Functions
+	/*
+		Title: Parameters Functions
 
-	Description of all the functions related to CGP-Library parameters
-*/
+		Description of all the functions related to CGP-Library parameters
+	*/
 
-/*
-	Function: initialiseParameters
+	/*
+		Function: initialiseParameters
 
-	Initialises a <parameters> structure used throughout the CGP-Library. The arguments describe the structure of the chromosomes created when using <initialiseChromosome>, <runCGP> or <repeatCGP>.
+		Initialises a <parameters> structure used throughout the CGP-Library. The arguments describe the structure of the chromosomes created when using <initialiseChromosome>, <runCGP> or <repeatCGP>.
 
-	Parameters:
-		numInputs - the number of chromosome inputs required.
-		numNodes - the number of chromosome nodes required.
-		numOutputs - the number of chromosome outputs required.
-		arity - the arity of each chromosome node required.
+		Parameters:
+			numInputs - the number of chromosome inputs required.
+			numNodes - the number of chromosome nodes required.
+			numOutputs - the number of chromosome outputs required.
+			arity - the arity of each chromosome node required.
 
-	Returns:
-		A pointer to an initialised <parameters> structure.
-
-	Example:
-
-		Initialising parameters
-
-		(begin code)
-		struct parameters *params;
-
-		int numInputs = 3;
-		int numNodes = 10;
-		int numOutputs = 2;
-		int nodeArity = 2;
-
-		params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
-		(end)
-
-	See Also:
-		<freeParameters>, <printParameters>
-*/
-DLL_EXPORT struct parameters *initialiseParameters(const int numInputs, const int numNodes, const int numOutputs, const int arity);
-
-/*
-	Function: freeParameters
-
-	Frees <parameters> structure instance.
-
-	Parameters:
-		params - pointer to initialised <parameters> structure.
-
-	See Also:
-		<initialiseParameters>
-*/
-DLL_EXPORT void freeParameters(struct parameters *params);
-
-/*
-	Function: printParameters
-
-	Prints the given <parameters> to the screen in a human readable format.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-
-	Example:
-
-		Typical <parameters> structure printed using <printParameters>.
-
-		(begin code)
-		---------------------------------------------------
-               Parameters
-		---------------------------------------------------
-		Evolutionary Strategy:		(1+4)-ES
-		Inputs:						1
-		Nodes:						15
-		Outputs:					1
-		Node Arity:					2
-		Connection weights range:	+/- 1.000000
-		Mutation Type:				probabilistic
-		Mutation rate:				0.050000
-		Fitness Function:			supervisedLearning
-		Target Fitness:				0.100000
-		Selection scheme:			selectFittest
-		Reproduction scheme:		mutateRandomParent
-		Update frequency:			500
-		Function Set: add sub mul div sin (5)
-		---------------------------------------------------
-		(end)
-*/
-DLL_EXPORT void printParameters(struct parameters *params);
-
-/*
-	Function: addNodeFunction
-
-	Adds pre-defined node function(s) to the set of functions stored by a <parameters> structure. These are the node functions available when using <runCGP>, <repeatCGP> and <mutateChromosome>.
-
-	If one function name is given that function is added to the function set. If multiple node function names are given then each must be separated by a ','.
-
-	If a node function name is given which is not recognised, a warning is given and that function is not added to the function set.
-
-	Parameters:
-		params - pointer to <parameters> structure
-		functionNames - the name(s) of the function(s) to be added to the function set
-
-	Node Functions:
-
-		mathematical operations
-
-		- add 		- 	summation over all inputs.
-		- sub		-	subtracts all but the first input from the first input
-		- mul		-	multiplies all of the inputs
-		- div		-	divides the first input by the second and then the third etc
-		- abs		-	the absolute of the first input
-		- sqrt		- 	the square root of the first input
-		- sq		-	the square of the first input
-		- cube		- 	the cube of the first input
-		- pow		-	the first input raised to the power of the second input
-		- exp 		- 	the exponential of the first input
-		- sin		- 	the sine of the first input
-		- cos 		-	the cosine of the first input
-		- tan		-	the tangent of the first input
-
-		logic gates
-
-		- and		-	returns '1' if all inputs are '1', else '0'
-		- nand		-	returns '0' if all inputs are '1', else, '1'
-		- or		-	returns '0' if all inputs are '0', else, '1'
-		- nor		-	returns '1' if all inputs are '0', else, '0'
-		- xor		-	returns '1' if only one of the inputs is '1', else, '0'
-		- xnor		-	returns '0' if only one of the inputs is '1', else, '1'
-		- not		-	returns '1' if first input is '0', else '1'
-
-
-		neuron transfer/activation functions
-
-		- sig		- 	the logistic sigmoid of the weighted sum of inputs. Output range [0,1]
-		- gauss		-	the Gaussian of the weighted sum of inputs. Output range [0,1]
-		- step		-	the heaviside step function of the weighted sum of inputs. Output range [0,1]
-		- softsign	-	the softsign of the weighted sum of inputs. Output range [-1,1]
-		- tanh		-	the hyperbolic tangent of the weighted sum of inputs. Output range [-1,1]
-
-
-		Other
-		- rand		- 	produces a different random number in the range [-1,1] each time it is called
-		- pi		-	produces the constant pi
-		- 1			- 	produces the constant one
-		- 0			- 	produces the constant zero
-		- wire		-	acts as a simple wire mapping the input to the output
-
-
-	Example:
-
-		Add the node functions logical AND OR NAND NOR and XOR to the function set.
-		(begin code)
-		addNodeFunction(params, "and,or,nand,nor,xor");
-		(end)
-
-	See Also:
-		<clearFunctionSet>, <addCustomNodeFunction>
-*/
-DLL_EXPORT void addNodeFunction(struct parameters *params, char const *functionNames);
-
-
-
-/*
-	Function: addCustomNodeFunction
-
-	Adds custom node function to the set of functions stored by a <parameters> structure. See <addNodeFunction>.
-
-	The custom fitness function prototype must take the form
-
-	(begin code)
-	double nodeFunctionName(const int numInputs, const double *inputs, const double *weights);
-	(end)
-
-	where the user replaces 'nodeFunctionName' with their own function name.
-
-	Parameters:
-		params - pointer to an initialised <parameters> structure
-		function - the custom node function
-		functionName - the name of the added function
-		maxNumInputs - maximum number of inputs to function (-1 is unlimited)
-
-	Example:
-
-		Creating a custom node function 'add'
-
-		(begin code)
-		double add(const int numInputs, const double *inputs, const double *connectionWeights){
-
-			int i;
-			double sum = 0;
-
-			for(i=0; i<numInputs; i++){
-				sum += inputs[i];
-			}
-
-			return sum;
-		}
-		(end)
-
-		Adding the new custom node function to the function set
-
-		(begin code)
-		addCustomNodeFunction(params, add, "add", -1);
-		(end)
-
-	Note:
-
-		The connections weights are used for when creating custom node functions for Artificial Neural Networks. If required they are accessed in the same way as the inputs.
-
-	See Also:
-		<clearFunctionSet>, <addNodeFunction>
-*/
-DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double (*function)(const int numInputs, const double *inputs, const double *weights), char const *functionName, int maxNumInputs);
-
-
-/*
-	Function: clearFunctionSet
-
-	Resets the function set stored by a <parameters> structure to contain no functions.
-
-	Parameters:
-		params - pointer to an initialised <parameters> structure
-
-	See Also:
-		<addNodeFunction>, <addCustomNodeFunction>
-*/
-DLL_EXPORT void clearFunctionSet(struct parameters *params);
-
-
-/*
-	Function: setNumInputs
-
-		Sets the number of chromosome inputs in the given <parameters>.
-
-		The given number of chromosome inputs is also parsed to ensure a valid number of chromosome inputs.
-		A number of chromosome inputs <0 is invalid. If an invalid number of chromosome inputs is give an error is displayed
-		and CGP-Library terminates.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		numInputs - The number of chromosome inputs to be set.
-
-	See Also:
-		<setNumNodes>, <setNumOutputs>, <setArity>
-
-*/
-DLL_EXPORT void setNumInputs(struct parameters *params, int numInputs);
-
-
-/*
-	Function: setNumNodes
-
-		Sets the number of chromosome nodes in the given <parameters>.
-
-		The given number of chromosome nodes is also parsed to ensure a valid number of chromosome nodes.
-		A number of chromosome nodes <0 is invalid. If an invalid number of chromosome nodes is give an error is displayed
-		and CGP-Library terminates.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		nodes - The number of chromosome nodes to be set.
-
-	See Also:
-		<setNumInputs>, <setNumOutputs>, <setArity>
-*/
-DLL_EXPORT void setNumNodes(struct parameters *params, int numNodes);
-
-/*
-	Function: setNumOutputs
-
-		Sets the number of chromosome outputs in the given <parameters>.
-
-		The given number of chromosome outputs is also parsed to ensure a valid number of chromosome outputs.
-		A number of chromosome outputs <1 is invalid. If an invalid number of chromosome outputs is give an error is displayed
-		and CGP-Library terminates.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		numOutputs - The number of chromosome outputs to be set.
-
-	See Also:
-		<setNumInputs>, <setNumNodes>, <setArity>
-*/
-DLL_EXPORT void setNumOutputs(struct parameters *params, int numOutputs);
-
-
-/*
-	Function: setArity
-
-		Sets the arity of the chromosome nodes in the given <parameters>.
-
-		The given arity for each chromosome node is also parsed to ensure a valid chromosome node arity.
-		A chromosome node arity <1 is invalid. If an invalid chromosome node arity is give an error is displayed
-		and CGP-Library terminates.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		arity - The chromosome node arity to be set.
-
-	See Also:
-		<setNumInputs>, <setNumNodes>, <setNumOutputs>
-*/
-DLL_EXPORT void setArity(struct parameters *params, int arity);
-
-
-
-/*
-	Function: setMu
-
-	Sets the mu value in the given <parameters>.
-
-	The given mu value is also parsed to ensure a valid mu value.
-	mu values <1 are invalid. If an invalid mu value is give a
-	warning is displayed and the mu value is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		mu - The value of mu to be set.
-*/
-DLL_EXPORT void setMu(struct parameters *params, int mu);
-
-
-/*
-	Function: setLambda
-
-	Sets the lambda value in the given <parameters>.
-
-	The given lambda value is also parsed to ensure a valid lambda value.
-	lambda values <1 are invalid. If an invalid lambda value is give a
-	warning is displayed and the lambda value is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		lambda - The value of lambda to be set.
-*/
-DLL_EXPORT void setLambda(struct parameters *params, int lambda);
-
-
-/*
-	Function: setEvolutionaryStrategy
-
-	Sets the evolutionary strategy in the given <parameters>.
-
-	The given evolutionary strategy is also parsed to ensure a valid evolutionary strategy.
-	Evolutionary strategies other than '+' and ',' are invalid. If an invalid evolutionary strategy is give a
-	warning is displayed and the evolutionary strategy is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		evolutionaryStrategy - The evolutionary strategy to be set.
-*/
-DLL_EXPORT void setEvolutionaryStrategy(struct parameters *params, char evolutionaryStrategy);
-
-
-/*
-	Function: setMutationRate
-
-	Sets the mutation rate in the given <parameters>.
-
-	The given mutation rate is also parsed to ensure a valid mutation rate.
-	Mutation rate <0 or >1 are invalid. If an invalid mutation rate is give a
-	warning is displayed and the mutation rate is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		mutationRate - The value of the mutation rate to be set.
-*/
-DLL_EXPORT void setMutationRate(struct parameters *params, double mutationRate);
-
-
-
-/*
-	Function: setRecurrentConnectionProbability
-
-	Sets the recurrent connection probability in the given <parameters>.
-
-	The recurrent connection probability specifies the probability that a mutation to a connection gene will create a recurrent connection; otherwise a standard feed forward connection is made. The given recurrent connection probability is also parsed to ensure a valid recurrent connection probability.
-	Recurrent connection probability <0 or >1 are invalid. If an invalid recurrent connection probability is give a
-	warning is displayed and the recurrent connection probability is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		recurrentConnectionProbability - The value of the recurrent connection probability to be set.
-*/
-DLL_EXPORT void setRecurrentConnectionProbability(struct parameters *params, double recurrentConnectionProbability);
-
-
-
-/*
-	Function: setShortcutConnections
-
-	Sets whether shortcut connections are used in the given <parameters>.
-
-	Shortcut Connections specifies whether an output can connect directly to an input.
-	Only Shortcut Connections of values 0 (no) and 1 (yes) are valid. If an invalid value is given, a warning is displayed and the shortcut connections value is left unchanged.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		shortcutConnections - whether shortcut connections are used
-*/
-DLL_EXPORT void setShortcutConnections(struct parameters *params, int shortcutConnections);
-
-
-/*
-	Function: setConnectionWeightRange
-
-	Sets the connection weight range in the given <parameters>. (only used by NeuroEvolution)
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		weightRange - The connection weight range to be set. (the range is +/- weightRange)
-*/
-DLL_EXPORT void setConnectionWeightRange(struct parameters *params, double weightRange);
-
-/*
-	Function: setCustomFitnessFunction
-
-	Set custom fitness function.
-
-	By default the CGP-Library used a generic supervised learning fitness function where the fitness assigned to each chromosome is the sum of the absolute differences between the actual and target outputs defined in the given <dataSet>. <setCustomFitnessFunction> is used to redefine the fitness function to be one of the users design.
-
-	All custom fitness function prototype must take the following form. Where params is a <parameters> structure, chromo is the <chromosome> to be assigned a fitness and data is a <dataSet> which may be used by the custom fitness function.
-
-	(begin code)
-	double functionName(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
-	(end)
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		fitnessFunction - the custom fitness function
-		fitnessFunctionName - name of custom fitness function
-
-		If the fitnessFunction parameter is set as NULL, the fitness function will be reset to the default supervised learning fitness function.
-
-	Example:
-
-		Defining a custom fitness function, full adder. Note that the <dataSet> does not have to be used.
-
-		(begin code)
-		double fullAdder(struct parameters *params, struct chromosome *chromo, struct data *dat){
-
-		int i;
-		double error = 0;
-
-		// full adder truth table
-		double inputs[8][3] = {{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}};
-		double outputs[8][2] = {{0,0},{1,0},{1,0},{0,1},{1,0},{0,1},{0,1},{1,1}};
-
-		 	//for each line in the truth table
-		 	for(i=0; i<8; i++){
-
-		 		// calculate the chromosome outputs for each set of inputs
-		 		executeChromosome(chromo, inputs[i]);
-
-		 		// If the first chromosome outputs differ from the correct outputs increment the error
-		 		if(outputs[i][0] != getChromosomeOutput(chromo, 0) ){
-		 			error++;
-		 		}
-
-		 		// If the second chromosome outputs differ from the correct outputs increment the error
-		 		if(outputs[i][1] != getChromosomeOutput(chromo, 1) ){
-		 			error++;
-		 		}
-		 	}
-
-		 	return error;
-		}
-		(end)
-
-		Setting the new custom fitness function as the fitness function to be used
-		(begin code)
-		setCustomFitnessFunction(params, fullAdder, "fullAdder");
-		(end)
-
-
-
-*/
-DLL_EXPORT void setCustomFitnessFunction(struct parameters *params, double (*fitnessFunction)(struct parameters *params, struct chromosome *chromo, struct dataSet *data), char const *fitnessFunctionName);
-
-
-/*
-	Function: setCustomSelectionScheme
-
-		Sets custom selection scheme.
-
-		By default the selection scheme used by CGP-Library is select fittest, where the fittest members of the candidate chromosomes are always selected as the parents. This type of selection scheme is commonly used by CGP. <setCustomSelectionScheme> is used to redefine the selection scheme to be one of the users design.
-
-		The custom selection scheme prototype must take the following form. Where params is a <parameters> structure, parents is an array of <chromosomes> used to store the selected parents, candidateChromos is an array of <chromosomes> containing the pool of <chromosomes> to select the parent from, numParents is the number of parents to be selected and numCandidateChromos is the number of candidate <chromosomes>.
-
-		(begin code)
-		void selectionSchemeNmes(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos);
-		(end)
-
-	Note:
-		The ordering of the candidateChromos is children followed by parents.
-
-	Parameters:
-
-		params - pointer to <parameters> structure
-		selectionScheme - the custom selection scheme
-		selectionSchemeName - name of custom selection scheme
-
-		If the selectionScheme parameter is set as NULL, the selection scheme will be reset to the default select fittest selection scheme.
-
-	Example:
-
-		Defining a custom selection scheme, tournament selection.
-
-		(begin code)
-		void tournament(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos){
-
-			int i;
-
-			// two chromosome pointers to point to the chromosomes in the torment
-			struct chromosome *candidateA;
-			struct chromosome *candidateB;
-
-			// for the number of required parents
-			for(i=0; i<numParents; i++){
-
-				// randomly select chromosomes for tournament
-				candidateA = candidateChromos[rand() % numCandidateChromos];
-				candidateB = candidateChromos[rand() % numCandidateChromos];
-
-				// choose the fittest chromosome to become a parent
-				if(getChromosomeFitness(candidateA) <= getChromosomeFitness(candidateB)){
-					copyChromosome(parents[i], candidateA);
-				}
-				else{
-					copyChromosome(parents[i], candidateB);
-				}
-			}
-		}
-		(end)
-
-		Setting the new custom selection scheme as the selection scheme to be used
-
-		(begin code)
-		setCustomSelectionScheme(params, tournament, "tournament");
-		(end)
-
-	See Also:
-		<setCustomFitnessFunction>
-*/
-DLL_EXPORT void setCustomSelectionScheme(struct parameters *params, void (*selectionScheme)(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos), char const *selectionSchemeName);
-
-
-/*
-	Function: setCustomReproductionScheme
-
-		Sets custom reproduction scheme.
-
-		By default the reproduction scheme used by CGP-Library is to create
-		each child as a mutated version of a randomly selected parent. This
-		type of reproduction scheme is commonly used by CGP.
-		<setCustomReproductionScheme> is used to redefine the reproduction scheme
-		to be one of the users design.
-
-		The custom reproduction scheme prototype must take the following
-		form. Where params is a <parameters> structure, parents is an array
-		of <chromosomes> which store the parents to select from, children is
-		an array of <chromosomes> which will contain the children
-		after reproduction, numParents is the number of parents
-		available for reproduction and numChildren is the number of
-		children to be created.
-
-		(begin code)
-		void reproductionScheme(struct parameters *params, struct chromosome **parents, struct chromosome **children, int numParents, int numChildren);
-		(end)
-
-		If the reproductionScheme parameter is set as NULL, the reproduction
-		scheme will be reset to the default mutate random parent
-		reproduction scheme.
+		Returns:
+			A pointer to an initialised <parameters> structure.
 
 		Example:
 
-		Defining a custom reproduction scheme, ...
+			Initialising parameters
+
+			(begin code)
+			struct parameters *params;
+
+			int numInputs = 3;
+			int numNodes = 10;
+			int numOutputs = 2;
+			int nodeArity = 2;
+
+			params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
+			(end)
+
+		See Also:
+			<freeParameters>, <printParameters>
+	*/
+
+	void saveConstants(struct chromosome *chromo, char* filename);
+	void runOnTest(struct chromosome *chromo, char* test_filename,char* error_filename, struct parameters *params);
+	void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
+
+	int* countOnesByColumn(struct dataSet *data, int begin, int end);
+
+	DLL_EXPORT struct parameters *initialiseParameters(const int numInputs, const int numNodes, const int numOutputs, const int arity, double maxMutationConst, double* defaultSimpleConstants, double* shiftForSigmoid, double* scaleForSigmoid, int currentSNPcolumn);
+
+	/*
+		Function: freeParameters
+
+		Frees <parameters> structure instance.
+
+		Parameters:
+			params - pointer to initialised <parameters> structure.
+
+		See Also:
+			<initialiseParameters>
+	*/
+	DLL_EXPORT void freeParameters(struct parameters *params);
+
+	/*
+		Function: printParameters
+
+		Prints the given <parameters> to the screen in a human readable format.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+
+		Example:
+
+			Typical <parameters> structure printed using <printParameters>.
+
+			(begin code)
+			---------------------------------------------------
+				   Parameters
+			---------------------------------------------------
+			Evolutionary Strategy:		(1+4)-ES
+			Inputs:						1
+			Nodes:						15
+			Outputs:					1
+			Node Arity:					2
+			Connection weights range:	+/- 1.000000
+			Mutation Type:				probabilistic
+			Mutation rate:				0.050000
+			Fitness Function:			supervisedLearning
+			Target Fitness:				0.100000
+			Selection scheme:			selectFittest
+			Reproduction scheme:		mutateRandomParent
+			Update frequency:			500
+			Function Set: add sub mul div sin (5)
+			---------------------------------------------------
+			(end)
+	*/
+	DLL_EXPORT void printParameters(struct parameters *params);
+
+	/*
+		Function: addNodeFunction
+
+		Adds pre-defined node function(s) to the set of functions stored by a <parameters> structure. These are the node functions available when using <runCGP>, <repeatCGP> and <mutateChromosome>.
+
+		If one function name is given that function is added to the function set. If multiple node function names are given then each must be separated by a ','.
+
+		If a node function name is given which is not recognised, a warning is given and that function is not added to the function set.
+
+		Parameters:
+			params - pointer to <parameters> structure
+			functionNames - the name(s) of the function(s) to be added to the function set
+
+		Node Functions:
+
+			mathematical operations
+
+			- add 		- 	summation over all inputs.
+			- sub		-	subtracts all but the first input from the first input
+			- mul		-	multiplies all of the inputs
+			- div		-	divides the first input by the second and then the third etc
+			- abs		-	the absolute of the first input
+			- sqrt		- 	the square root of the first input
+			- sq		-	the square of the first input
+			- cube		- 	the cube of the first input
+			- pow		-	the first input raised to the power of the second input
+			- exp 		- 	the exponential of the first input
+			- sin		- 	the sine of the first input
+			- cos 		-	the cosine of the first input
+			- tan		-	the tangent of the first input
+
+			logic gates
+
+			- and		-	returns '1' if all inputs are '1', else '0'
+			- nand		-	returns '0' if all inputs are '1', else, '1'
+			- or		-	returns '0' if all inputs are '0', else, '1'
+			- nor		-	returns '1' if all inputs are '0', else, '0'
+			- xor		-	returns '1' if only one of the inputs is '1', else, '0'
+			- xnor		-	returns '0' if only one of the inputs is '1', else, '1'
+			- not		-	returns '1' if first input is '0', else '1'
+
+
+			neuron transfer/activation functions
+
+			- sig		- 	the logistic sigmoid of the weighted sum of inputs. Output range [0,1]
+			- gauss		-	the Gaussian of the weighted sum of inputs. Output range [0,1]
+			- step		-	the heaviside step function of the weighted sum of inputs. Output range [0,1]
+			- softsign	-	the softsign of the weighted sum of inputs. Output range [-1,1]
+			- tanh		-	the hyperbolic tangent of the weighted sum of inputs. Output range [-1,1]
+
+
+			Other
+			- rand		- 	produces a different random number in the range [-1,1] each time it is called
+			- pi		-	produces the constant pi
+			- 1			- 	produces the constant one
+			- 0			- 	produces the constant zero
+			- wire		-	acts as a simple wire mapping the input to the output
+
+
+		Example:
+
+			Add the node functions logical AND OR NAND NOR and XOR to the function set.
+			(begin code)
+			addNodeFunction(params, "and,or,nand,nor,xor");
+			(end)
+
+		See Also:
+			<clearFunctionSet>, <addCustomNodeFunction>
+	*/
+	DLL_EXPORT void addNodeFunction(struct parameters *params, char const *functionNames);
+
+
+
+	/*
+		Function: addCustomNodeFunction
+
+		Adds custom node function to the set of functions stored by a <parameters> structure. See <addNodeFunction>.
+
+		The custom fitness function prototype must take the form
 
 		(begin code)
-
+		double nodeFunctionName(const int numInputs, const double *inputs, const double *weights);
 		(end)
 
-		Setting the new custom reproduction scheme as the reproduction scheme to be used
+		where the user replaces 'nodeFunctionName' with their own function name.
+
+		Parameters:
+			params - pointer to an initialised <parameters> structure
+			function - the custom node function
+			functionName - the name of the added function
+			maxNumInputs - maximum number of inputs to function (-1 is unlimited)
+
+		Example:
+
+			Creating a custom node function 'add'
+
+			(begin code)
+			double add(const int numInputs, const double *inputs, const double *connectionWeights){
+
+				int i;
+				double sum = 0;
+
+				for(i=0; i<numInputs; i++){
+					sum += inputs[i];
+				}
+
+				return sum;
+			}
+			(end)
+
+			Adding the new custom node function to the function set
+
+			(begin code)
+			addCustomNodeFunction(params, add, "add", -1);
+			(end)
+
+		Note:
+
+			The connections weights are used for when creating custom node functions for Artificial Neural Networks. If required they are accessed in the same way as the inputs.
+
+		See Also:
+			<clearFunctionSet>, <addNodeFunction>
+	*/
+	DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double(*function)(const int numInputs, const double *inputs, const double *weights), char const *functionName, int maxNumInputs);
+
+
+	/*
+		Function: clearFunctionSet
+
+		Resets the function set stored by a <parameters> structure to contain no functions.
+
+		Parameters:
+			params - pointer to an initialised <parameters> structure
+
+		See Also:
+			<addNodeFunction>, <addCustomNodeFunction>
+	*/
+	DLL_EXPORT void clearFunctionSet(struct parameters *params);
+
+
+	/*
+		Function: setNumInputs
+
+			Sets the number of chromosome inputs in the given <parameters>.
+
+			The given number of chromosome inputs is also parsed to ensure a valid number of chromosome inputs.
+			A number of chromosome inputs <0 is invalid. If an invalid number of chromosome inputs is give an error is displayed
+			and CGP-Library terminates.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			numInputs - The number of chromosome inputs to be set.
+
+		See Also:
+			<setNumNodes>, <setNumOutputs>, <setArity>
+
+	*/
+	DLL_EXPORT void setNumInputs(struct parameters *params, int numInputs);
+
+
+	/*
+		Function: setNumNodes
+
+			Sets the number of chromosome nodes in the given <parameters>.
+
+			The given number of chromosome nodes is also parsed to ensure a valid number of chromosome nodes.
+			A number of chromosome nodes <0 is invalid. If an invalid number of chromosome nodes is give an error is displayed
+			and CGP-Library terminates.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			nodes - The number of chromosome nodes to be set.
+
+		See Also:
+			<setNumInputs>, <setNumOutputs>, <setArity>
+	*/
+	DLL_EXPORT void setNumNodes(struct parameters *params, int numNodes);
+
+	/*
+		Function: setNumOutputs
+
+			Sets the number of chromosome outputs in the given <parameters>.
+
+			The given number of chromosome outputs is also parsed to ensure a valid number of chromosome outputs.
+			A number of chromosome outputs <1 is invalid. If an invalid number of chromosome outputs is give an error is displayed
+			and CGP-Library terminates.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			numOutputs - The number of chromosome outputs to be set.
+
+		See Also:
+			<setNumInputs>, <setNumNodes>, <setArity>
+	*/
+	DLL_EXPORT void setNumOutputs(struct parameters *params, int numOutputs);
+
+
+	/*
+		Function: setArity
+
+			Sets the arity of the chromosome nodes in the given <parameters>.
+
+			The given arity for each chromosome node is also parsed to ensure a valid chromosome node arity.
+			A chromosome node arity <1 is invalid. If an invalid chromosome node arity is give an error is displayed
+			and CGP-Library terminates.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			arity - The chromosome node arity to be set.
+
+		See Also:
+			<setNumInputs>, <setNumNodes>, <setNumOutputs>
+	*/
+	DLL_EXPORT void setArity(struct parameters *params, int arity);
+
+
+
+	/*
+		Function: setMu
+
+		Sets the mu value in the given <parameters>.
+
+		The given mu value is also parsed to ensure a valid mu value.
+		mu values <1 are invalid. If an invalid mu value is give a
+		warning is displayed and the mu value is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			mu - The value of mu to be set.
+	*/
+	DLL_EXPORT void setMu(struct parameters *params, int mu);
+
+
+	/*
+		Function: setLambda
+
+		Sets the lambda value in the given <parameters>.
+
+		The given lambda value is also parsed to ensure a valid lambda value.
+		lambda values <1 are invalid. If an invalid lambda value is give a
+		warning is displayed and the lambda value is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			lambda - The value of lambda to be set.
+	*/
+	DLL_EXPORT void setLambda(struct parameters *params, int lambda);
+
+
+	/*
+		Function: setEvolutionaryStrategy
+
+		Sets the evolutionary strategy in the given <parameters>.
+
+		The given evolutionary strategy is also parsed to ensure a valid evolutionary strategy.
+		Evolutionary strategies other than '+' and ',' are invalid. If an invalid evolutionary strategy is give a
+		warning is displayed and the evolutionary strategy is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			evolutionaryStrategy - The evolutionary strategy to be set.
+	*/
+	DLL_EXPORT void setEvolutionaryStrategy(struct parameters *params, char evolutionaryStrategy);
+
+
+	/*
+		Function: setMutationRate
+
+		Sets the mutation rate in the given <parameters>.
+
+		The given mutation rate is also parsed to ensure a valid mutation rate.
+		Mutation rate <0 or >1 are invalid. If an invalid mutation rate is give a
+		warning is displayed and the mutation rate is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			mutationRate - The value of the mutation rate to be set.
+	*/
+	DLL_EXPORT void setMutationRate(struct parameters *params, double mutationRate);
+
+
+
+	/*
+		Function: setRecurrentConnectionProbability
+
+		Sets the recurrent connection probability in the given <parameters>.
+
+		The recurrent connection probability specifies the probability that a mutation to a connection gene will create a recurrent connection; otherwise a standard feed forward connection is made. The given recurrent connection probability is also parsed to ensure a valid recurrent connection probability.
+		Recurrent connection probability <0 or >1 are invalid. If an invalid recurrent connection probability is give a
+		warning is displayed and the recurrent connection probability is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			recurrentConnectionProbability - The value of the recurrent connection probability to be set.
+	*/
+	DLL_EXPORT void setRecurrentConnectionProbability(struct parameters *params, double recurrentConnectionProbability);
+
+
+
+	/*
+		Function: setShortcutConnections
+
+		Sets whether shortcut connections are used in the given <parameters>.
+
+		Shortcut Connections specifies whether an output can connect directly to an input.
+		Only Shortcut Connections of values 0 (no) and 1 (yes) are valid. If an invalid value is given, a warning is displayed and the shortcut connections value is left unchanged.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			shortcutConnections - whether shortcut connections are used
+	*/
+	DLL_EXPORT void setShortcutConnections(struct parameters *params, int shortcutConnections);
+
+
+	/*
+		Function: setConnectionWeightRange
+
+		Sets the connection weight range in the given <parameters>. (only used by NeuroEvolution)
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			weightRange - The connection weight range to be set. (the range is +/- weightRange)
+	*/
+	DLL_EXPORT void setConnectionWeightRange(struct parameters *params, double weightRange);
+
+	/*
+		Function: setCustomFitnessFunction
+
+		Set custom fitness function.
+
+		By default the CGP-Library used a generic supervised learning fitness function where the fitness assigned to each chromosome is the sum of the absolute differences between the actual and target outputs defined in the given <dataSet>. <setCustomFitnessFunction> is used to redefine the fitness function to be one of the users design.
+
+		All custom fitness function prototype must take the following form. Where params is a <parameters> structure, chromo is the <chromosome> to be assigned a fitness and data is a <dataSet> which may be used by the custom fitness function.
 
 		(begin code)
-		setCustomReproductionScheme(params, ..., "...");
+		double functionName(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
 		(end)
 
-	See Also:
-		<setCustomFitnessFunction>, <setCustomSelectionScheme>
+		Parameters:
+			params - pointer to <parameters> structure.
+			fitnessFunction - the custom fitness function
+			fitnessFunctionName - name of custom fitness function
 
-*/
-DLL_EXPORT void setCustomReproductionScheme(struct parameters *params, void
-		(*reproductionScheme)(struct parameters *params, struct chromosome **parents, struct chromosome **children, int numParents, int numChildren), char const *reproductionSchemeName);
+			If the fitnessFunction parameter is set as NULL, the fitness function will be reset to the default supervised learning fitness function.
 
+		Example:
 
+			Defining a custom fitness function, full adder. Note that the <dataSet> does not have to be used.
 
-/*
-	Function: setTargetFitness
+			(begin code)
+			double fullAdder(struct parameters *params, struct chromosome *chromo, struct data *dat){
 
-		Sets the target fitness used when running CGP.
+			int i;
+			double error = 0;
 
-		In all cases lower fitness values are used to represent fitter chromosomes.
+			// full adder truth table
+			double inputs[8][3] = {{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}};
+			double outputs[8][2] = {{0,0},{1,0},{1,0},{0,1},{1,0},{0,1},{0,1},{1,1}};
 
-	Parameters:
-		params - pointer to <parameters> structure.
-		targetFitness - The target fitness to be set.
-*/
-DLL_EXPORT void setTargetFitness(struct parameters *params, double targetFitness);
+				//for each line in the truth table
+				for(i=0; i<8; i++){
 
-/*
-	Function: setMutationType
+					// calculate the chromosome outputs for each set of inputs
+					executeChromosome(chromo, inputs[i]);
 
-		Sets the mutation method used when mutating chromosomes.
+					// If the first chromosome outputs differ from the correct outputs increment the error
+					if(outputs[i][0] != getChromosomeOutput(chromo, 0) ){
+						error++;
+					}
 
-		Used to set the mutation method used when running <runCGP> and <repeatCGP> or when mutating an individual chromosome using <mutateChromosome>. The type of mutation used is set the <parameters> structure.
+					// If the second chromosome outputs differ from the correct outputs increment the error
+					if(outputs[i][1] != getChromosomeOutput(chromo, 1) ){
+						error++;
+					}
+				}
 
-		If an invalid mutation type is given a warning is displayed and the mutation type is left unchanged.
+				return error;
+			}
+			(end)
 
-		Mutation Methods:
+			Setting the new custom fitness function as the fitness function to be used
+			(begin code)
+			setCustomFitnessFunction(params, fullAdder, "fullAdder");
+			(end)
 
-			These are the mutation methods which can be selected from.
 
-			- "probabilistic". The *default* mutation method. Mutates each chromosome gene with a given probability; set with <setMutationRate>.
-			- "point". Always mutates the same number of randomly selected genes. The number of mutated genes is the total number of genes times the mutation rate. Note: does not mutate weight genes, see pointANN.
-			- "pointANN". Point mutation when evolving artificial neural networks; includes mutations to weight genes.
-			- "onlyActive". Conducts probabilistic mutation on active nodes only. Genes belonging to inactive nodes are not mutated.
-			- "single". Keeps mutating randomly selected genes until an active gene is mutated to a new allele. Note: this is independent of the mutation rate set. Note: this does not mutate weight genes.
 
-	Parameters:
-		params - pointer to <parameters> structure.
-		mutationType - char array specifying the mutation type.
+	*/
+	DLL_EXPORT void setCustomFitnessFunction(struct parameters *params, double(*fitnessFunction)(struct parameters *params, struct chromosome *chromo, struct dataSet *data), char const *fitnessFunctionName);
 
-	Example:
-		(begin code)
-			struct parameters *params = NULL;
 
-			params = initialiseParameters(1,10,1,2);
-			setMutationType(params, "point");
+	/*
+		Function: setCustomSelectionScheme
 
-			setMutationType()
-		(end)
+			Sets custom selection scheme.
 
-	See Also:
-			<setMutationRate>
+			By default the selection scheme used by CGP-Library is select fittest, where the fittest members of the candidate chromosomes are always selected as the parents. This type of selection scheme is commonly used by CGP. <setCustomSelectionScheme> is used to redefine the selection scheme to be one of the users design.
 
-*/
-DLL_EXPORT void setMutationType(struct parameters *params, char const *mutationType);
+			The custom selection scheme prototype must take the following form. Where params is a <parameters> structure, parents is an array of <chromosomes> used to store the selected parents, candidateChromos is an array of <chromosomes> containing the pool of <chromosomes> to select the parent from, numParents is the number of parents to be selected and numCandidateChromos is the number of candidate <chromosomes>.
 
+			(begin code)
+			void selectionSchemeNmes(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos);
+			(end)
 
-/*
-	Function: setUpdateFrequency
+		Note:
+			The ordering of the candidateChromos is children followed by parents.
 
-		Sets the frequency of the updates to the user when using <runCGP>.
+		Parameters:
 
-		The update frequency represents the number of generations which elapse between showing the user the current best fitness.
+			params - pointer to <parameters> structure
+			selectionScheme - the custom selection scheme
+			selectionSchemeName - name of custom selection scheme
 
-	Note:
-		A value of '0' is a special case which causes not updates to be shown.
+			If the selectionScheme parameter is set as NULL, the selection scheme will be reset to the default select fittest selection scheme.
 
-	Parameters:
-		params - pointer to <parameters> structure.
-		updateFrequency - update frequency in generations.
-*/
-DLL_EXPORT void setUpdateFrequency(struct parameters *params, int updateFrequency);
+		Example:
 
+			Defining a custom selection scheme, tournament selection.
 
+			(begin code)
+			void tournament(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos){
 
-/*
-	Function: setNumThreads
+				int i;
 
-	Sets the number of threads in the given <parameters>.
+				// two chromosome pointers to point to the chromosomes in the torment
+				struct chromosome *candidateA;
+				struct chromosome *candidateB;
 
-	The given number of threads is also parsed to ensure a valid value.
-	Values <1 are invalid. If an invalid value is give a
-	warning is displayed and the value is left unchanged.
+				// for the number of required parents
+				for(i=0; i<numParents; i++){
 
-	Note:
-		In order for the CGP-Library to use multiple threads it must be compiled
-		with openMP flag set (-fopenmp for gcc/mingw).
+					// randomly select chromosomes for tournament
+					candidateA = candidateChromos[rand() % numCandidateChromos];
+					candidateB = candidateChromos[rand() % numCandidateChromos];
 
-	Note:
-		The CGP-Library ignores the OMP_NUM_THREADS environment variable. The
-		only method for setting the number of threads is using <setNumThreads>.
-
-	Parameters:
-		params - pointer to <parameters> structure.
-		numThreads - The number of threads to be set.
-*/
-DLL_EXPORT void setNumThreads(struct parameters *params, int numThreads);
-
-
-/*
-	Title: Chromosome Functions
-
-	Description of all functions and structures relating to chromosomes
-*/
-
-/*
-	Function: initialiseChromosome
-		Initialises a chromosome based on the given <parameters>.
-
-	Parameters:
-		params - pointer to <parameters> structure
-
-	Returns:
-		A pointer to an initialised chromosome structure.
-
-	See Also:
-		<freeChromosome>, <initialiseChromosomeFromFile>, <initialiseChromosomeFromChromosome>
-*/
-DLL_EXPORT struct chromosome *initialiseChromosome(struct parameters *params);
-
-
-/*
-	Function: initialiseChromosomeFromFile
-		Initialises a chromosome from a given previously saved chromosome.
-
-	Note:
-		Only chromosomes which use node functions defined by the CGP-library can be loaded. Chromosomes which use custom node functions cannot be loaded.
-
-	Parameters:
-		file - char array giving the location of the chromosome to be loaded.
-
-	Returns:
-		A pointer to an initialised chromosome structure.
-
-	Example:
-
-		(begin code)
-		struct Chromosome *chromo;
-		char *chromoFile = "location of Chromosome";
-
-		chromo = loadChromosome(chromoFile);
-		(end)
-
-	See Also:
-		<freeChromosome>, <initialiseChromosome>, <initialiseChromosomeFromChromosome>,
-*/
-DLL_EXPORT struct chromosome* initialiseChromosomeFromFile(char const *file);
-
-/*
-	Function: initialiseChromosomeFromChromosome
-
-	Initialises a chromosome from a given chromosome.
-
-	This functions can be used to create a copy of a chromosome.
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	Returns:
-		A pointer to an initialised chromosome structure.
-
-	See Also:
-		<freeChromosome>, <initialiseChromosome>, <initialiseChromosomeFromFile>
-*/
-DLL_EXPORT struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo);
-
-/*
-	Function: freeChromosome
-
-		Frees chromosome instance.
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	See Also:
-		<initialiseChromosome>, <initialiseChromosomeFromFile>
-*/
-DLL_EXPORT void freeChromosome(struct chromosome *chromo);
-
-
-/*
-	Function: printChromosome
-		Displays the given chromosome to the terminal / command prompt in a human readable format.
-
-	Parameters:
-		chromo - pointer to chromosome structure.
-		weights - if set as 1 display connections weights
-
-	Example:
-
-		Typical output from <printChromosome>.
-
-		Each input and functioning node is labelled with its index in the chromosome. There is a textual description of the node e.g. *input* for input nodes or the operation for the function nodes. Function node operations are followed by space separated values describing each nodes inputs. Active nodes are also labelled with an *. Finally the last line gives the  nodes used as chromosome outputs.
-
-		(begin code)
-		(0):	input
-		(1):	mul	0 0 *
-		(2):	add	0 1 *
-		(3):	sub	2 0 *
-		(4):	mul	0 1 *
-		(5):	add	4 3 *
-		(6):	sub	4 2 *
-		(7):	mul	6 5 *
-		(8):	add	5 7 *
-		(9):	mul	1 6
-		(10):	mul	5 3
-		(11):	add	4 1
-		(12):	add	10 3
-		(13):	add	5 11
-		(14):	sub	3 6
-		(15):	div	5 13
-		outputs: 8
-		(end)
-*/
-DLL_EXPORT void printChromosome(struct chromosome *chromo, int weights);
-
-
-/*
-	Function: executeChromosome
-		Executes the given chromosome.
-
-		Executes the given chromosome with the given inputs. The dimensions of the inputs arrays must match the dimensions of the chromosome inputs. The chromosome outputs are then accessed using <getChromosomeOutput>.
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-		inputs - array of doubles used as inputs to the chromosome
-
-	Example:
-
-		for a chromosome with three inputs and one outputs.
+					// choose the fittest chromosome to become a parent
+					if(getChromosomeFitness(candidateA) <= getChromosomeFitness(candidateB)){
+						copyChromosome(parents[i], candidateA);
+					}
+					else{
+						copyChromosome(parents[i], candidateB);
+					}
+				}
+			}
+			(end)
+
+			Setting the new custom selection scheme as the selection scheme to be used
+
+			(begin code)
+			setCustomSelectionScheme(params, tournament, "tournament");
+			(end)
+
+		See Also:
+			<setCustomFitnessFunction>
+	*/
+	DLL_EXPORT void setCustomSelectionScheme(struct parameters *params, void(*selectionScheme)(struct parameters *params, struct chromosome **parents, struct chromosome **candidateChromos, int numParents, int numCandidateChromos), char const *selectionSchemeName);
+
+
+	/*
+		Function: setCustomReproductionScheme
+
+			Sets custom reproduction scheme.
+
+			By default the reproduction scheme used by CGP-Library is to create
+			each child as a mutated version of a randomly selected parent. This
+			type of reproduction scheme is commonly used by CGP.
+			<setCustomReproductionScheme> is used to redefine the reproduction scheme
+			to be one of the users design.
+
+			The custom reproduction scheme prototype must take the following
+			form. Where params is a <parameters> structure, parents is an array
+			of <chromosomes> which store the parents to select from, children is
+			an array of <chromosomes> which will contain the children
+			after reproduction, numParents is the number of parents
+			available for reproduction and numChildren is the number of
+			children to be created.
+
+			(begin code)
+			void reproductionScheme(struct parameters *params, struct chromosome **parents, struct chromosome **children, int numParents, int numChildren);
+			(end)
+
+			If the reproductionScheme parameter is set as NULL, the reproduction
+			scheme will be reset to the default mutate random parent
+			reproduction scheme.
+
+			Example:
+
+			Defining a custom reproduction scheme, ...
 
 			(begin code)
 
-			struct parameters *params = NULL;
-			struct chromosome *chromo = NULL;
+			(end)
 
-			double chromoInputs[] = {1, 2};
-			double chromoOutput;
+			Setting the new custom reproduction scheme as the reproduction scheme to be used
 
-			params = initialiseParameters(2, 10, 1, 2);
-			addNodeFunction(params, "add,sub,mul,sq,cube,sin");
+			(begin code)
+			setCustomReproductionScheme(params, ..., "...");
+			(end)
 
-			chromo = initialiseChromosome(params);
+		See Also:
+			<setCustomFitnessFunction>, <setCustomSelectionScheme>
 
-			executeChromosome(chromo, chromoInputs);
+	*/
+	DLL_EXPORT void setCustomReproductionScheme(struct parameters *params, void
+	(*reproductionScheme)(struct parameters *params, struct chromosome **parents, struct chromosome **children, int numParents, int numChildren), char const *reproductionSchemeName);
 
-			chromoOutput = getChromosomeOutput(chromo, 0);
 
-			freeParameters(params);
-			freeChromosome(chromo);
+
+	/*
+		Function: setTargetFitness
+
+			Sets the target fitness used when running CGP.
+
+			In all cases lower fitness values are used to represent fitter chromosomes.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			targetFitness - The target fitness to be set.
+	*/
+	DLL_EXPORT void setTargetFitness(struct parameters *params, double targetFitness);
+
+	/*
+		Function: setMutationType
+
+			Sets the mutation method used when mutating chromosomes.
+
+			Used to set the mutation method used when running <runCGP> and <repeatCGP> or when mutating an individual chromosome using <mutateChromosome>. The type of mutation used is set the <parameters> structure.
+
+			If an invalid mutation type is given a warning is displayed and the mutation type is left unchanged.
+
+			Mutation Methods:
+
+				These are the mutation methods which can be selected from.
+
+				- "probabilistic". The *default* mutation method. Mutates each chromosome gene with a given probability; set with <setMutationRate>.
+				- "point". Always mutates the same number of randomly selected genes. The number of mutated genes is the total number of genes times the mutation rate. Note: does not mutate weight genes, see pointANN.
+				- "pointANN". Point mutation when evolving artificial neural networks; includes mutations to weight genes.
+				- "onlyActive". Conducts probabilistic mutation on active nodes only. Genes belonging to inactive nodes are not mutated.
+				- "single". Keeps mutating randomly selected genes until an active gene is mutated to a new allele. Note: this is independent of the mutation rate set. Note: this does not mutate weight genes.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			mutationType - char array specifying the mutation type.
+
+		Example:
+			(begin code)
+				struct parameters *params = NULL;
+
+				params = initialiseParameters(1,10,1,2);
+				setMutationType(params, "point");
+
+				setMutationType()
+			(end)
+
+		See Also:
+				<setMutationRate>
+
+	*/
+	DLL_EXPORT void setMutationType(struct parameters *params, char const *mutationType);
+
+
+	/*
+		Function: setUpdateFrequency
+
+			Sets the frequency of the updates to the user when using <runCGP>.
+
+			The update frequency represents the number of generations which elapse between showing the user the current best fitness.
+
+		Note:
+			A value of '0' is a special case which causes not updates to be shown.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			updateFrequency - update frequency in generations.
+	*/
+	DLL_EXPORT void setUpdateFrequency(struct parameters *params, int updateFrequency);
+
+
+
+	/*
+		Function: setNumThreads
+
+		Sets the number of threads in the given <parameters>.
+
+		The given number of threads is also parsed to ensure a valid value.
+		Values <1 are invalid. If an invalid value is give a
+		warning is displayed and the value is left unchanged.
+
+		Note:
+			In order for the CGP-Library to use multiple threads it must be compiled
+			with openMP flag set (-fopenmp for gcc/mingw).
+
+		Note:
+			The CGP-Library ignores the OMP_NUM_THREADS environment variable. The
+			only method for setting the number of threads is using <setNumThreads>.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			numThreads - The number of threads to be set.
+	*/
+	DLL_EXPORT void setNumThreads(struct parameters *params, int numThreads);
+
+
+	/*
+		Title: Chromosome Functions
+
+		Description of all functions and structures relating to chromosomes
+	*/
+
+	/*
+		Function: initialiseChromosome
+			Initialises a chromosome based on the given <parameters>.
+
+		Parameters:
+			params - pointer to <parameters> structure
+
+		Returns:
+			A pointer to an initialised chromosome structure.
+
+		See Also:
+			<freeChromosome>, <initialiseChromosomeFromFile>, <initialiseChromosomeFromChromosome>
+	*/
+	DLL_EXPORT struct chromosome *initialiseChromosome(struct parameters *params);
+
+
+	/*
+		Function: initialiseChromosomeFromFile
+			Initialises a chromosome from a given previously saved chromosome.
+
+		Note:
+			Only chromosomes which use node functions defined by the CGP-library can be loaded. Chromosomes which use custom node functions cannot be loaded.
+
+		Parameters:
+			file - char array giving the location of the chromosome to be loaded.
+
+		Returns:
+			A pointer to an initialised chromosome structure.
+
+		Example:
+
+			(begin code)
+			struct Chromosome *chromo;
+			char *chromoFile = "location of Chromosome";
+
+			chromo = loadChromosome(chromoFile);
+			(end)
+
+		See Also:
+			<freeChromosome>, <initialiseChromosome>, <initialiseChromosomeFromChromosome>,
+	*/
+	DLL_EXPORT struct chromosome* initialiseChromosomeFromFile(char const *file, double maxMutationConst, double* defaultSimpleConstants, double* shiftForSigmoid, double* scaleForSigmoid);
+
+	/*
+		Function: initialiseChromosomeFromChromosome
+
+		Initialises a chromosome from a given chromosome.
+
+		This functions can be used to create a copy of a chromosome.
+
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
+
+		Returns:
+			A pointer to an initialised chromosome structure.
+
+		See Also:
+			<freeChromosome>, <initialiseChromosome>, <initialiseChromosomeFromFile>
+	*/
+	DLL_EXPORT struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo);
+
+	/*
+		Function: freeChromosome
+
+			Frees chromosome instance.
+
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
+
+		See Also:
+			<initialiseChromosome>, <initialiseChromosomeFromFile>
+	*/
+	DLL_EXPORT void freeChromosome(struct chromosome *chromo);
+
+
+	/*
+		Function: printChromosome
+			Displays the given chromosome to the terminal / command prompt in a human readable format.
+
+		Parameters:
+			chromo - pointer to chromosome structure.
+			weights - if set as 1 display connections weights
+
+		Example:
+
+			Typical output from <printChromosome>.
+
+			Each input and functioning node is labelled with its index in the chromosome. There is a textual description of the node e.g. *input* for input nodes or the operation for the function nodes. Function node operations are followed by space separated values describing each nodes inputs. Active nodes are also labelled with an *. Finally the last line gives the  nodes used as chromosome outputs.
+
+			(begin code)
+			(0):	input
+			(1):	mul	0 0 *
+			(2):	add	0 1 *
+			(3):	sub	2 0 *
+			(4):	mul	0 1 *
+			(5):	add	4 3 *
+			(6):	sub	4 2 *
+			(7):	mul	6 5 *
+			(8):	add	5 7 *
+			(9):	mul	1 6
+			(10):	mul	5 3
+			(11):	add	4 1
+			(12):	add	10 3
+			(13):	add	5 11
+			(14):	sub	3 6
+			(15):	div	5 13
+			outputs: 8
+			(end)
+	*/
+	DLL_EXPORT void printChromosome(struct chromosome *chromo, int weights);
+
+
+	/*
+		Function: executeChromosome
+			Executes the given chromosome.
+
+			Executes the given chromosome with the given inputs. The dimensions of the inputs arrays must match the dimensions of the chromosome inputs. The chromosome outputs are then accessed using <getChromosomeOutput>.
+
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
+			inputs - array of doubles used as inputs to the chromosome
+
+		Example:
+
+			for a chromosome with three inputs and one outputs.
+
+				(begin code)
+
+				struct parameters *params = NULL;
+				struct chromosome *chromo = NULL;
+
+				double chromoInputs[] = {1, 2};
+				double chromoOutput;
+
+				params = initialiseParameters(2, 10, 1, 2);
+				addNodeFunction(params, "add,sub,mul,sq,cube,sin");
+
+				chromo = initialiseChromosome(params);
+
+				executeChromosome(chromo, chromoInputs);
+
+				chromoOutput = getChromosomeOutput(chromo, 0);
+
+				freeParameters(params);
+				freeChromosome(chromo);
+
+				(end)
 
 			(end)
 
-		(end)
+		See Also:
+				<getChromosomeOutput>
 
-	See Also:
-			<getChromosomeOutput>
-
-*/
-DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs);
+	*/
+	DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs, double currentSNP);
 
 
 
-/*
-	Function: getChromosomeOutput
-		Gets the outputs of the given chromosome *after* it has been executed using <executeChromosome>.
+	/*
+		Function: getChromosomeOutput
+			Gets the outputs of the given chromosome *after* it has been executed using <executeChromosome>.
 
-		After a given chromosome has been executed using <executeChromosome> the chromosome outputs are made available using <getChromosomeOutput>.
+			After a given chromosome has been executed using <executeChromosome> the chromosome outputs are made available using <getChromosomeOutput>.
+
+			Parameters:
+				chromo - pointer to an initialised chromosome structure.
+				output - The index of the output to be retrieved
+
+			Example:
+				See <executeChromosome>
+
+		See Also:
+				<executeChromosome>
+	*/
+	DLL_EXPORT double getChromosomeOutput(struct chromosome *chromo, int output);
+
+
+
+	/*
+		Function: getChromosomeNodeValue
+			Gets the node value of the given chromosome and node *after* it has been executed using <executeChromosome>.
+
+			After a given chromosome has been executed using <executeChromosome> the chromosome node values are made available using <getChromosomeNodeValue>.
+
+			Parameters:
+				chromo - pointer to an initialised chromosome structure.
+				output - The index of the node value to be retrieved
+
+		See Also:
+				<executeChromosome>, <getChromosomeOutput>
+	*/
+	DLL_EXPORT double getChromosomeNodeValue(struct chromosome *chromo, int node);
+
+
+	/*
+		Function: isNodeActive
+			Returns whether the given node in the given chromosome is active. 1-active, 0-inactive
+
+			If the given node index is less than zero or greater then the number of nodes in the given chromosome and error message is displayed and the program will terminate.
+
+			Parameters:
+				chromo - pointer to an initialised chromosome structure.
+				node - The index of the node
+	*/
+	DLL_EXPORT int isNodeActive(struct chromosome *chromo, int node);
+
+
+	/*
+		Function: saveChromosome
+			Saves the given chromosome to a file which can used to initialise new chromosomes.
+
+			New chromosomes can be initialised using the saved chromosomes by calling <initialiseChromosomeFromFile>.
+
+		Note:
+			Only chromosome which use node functions defined by the CGP-library can be loaded. Chromosomes which use custom node functions cannot be loaded.
 
 		Parameters:
-			chromo - pointer to an initialised chromosome structure.
-			output - The index of the output to be retrieved
+			chromo - pointer to chromosome structure.
+			fileName - char array giving the location of the chromosome to be saved.
+
+		See Also:
+			<initialiseChromosomeFromFile>, <saveChromosomeDot> <saveChromosomeLatex>
+	*/
+	DLL_EXPORT void saveChromosome(struct chromosome *chromo, char const *fileName);
+
+	/*
+		Function: saveChromosomeDot
+
+			Saves the given <chromosome> to a graphviz .dot file.
+
+			graphviz (www.graphviz.org) is a free open source graph
+			drawing tool. Once installed graphviz can be used to draw the
+			<chromosomes> saved using <saveChromosomeDot> with the following
+			command.
+
+			(begin code)
+			dot -Tsvg chromosome.dot -o chromosome.svg
+			(end)
+
+		Parameters:
+			chromo - pointer to chromosome structure.
+			weights - whether or not to include connection weights, 0 - without weights, 1 - with weights.
+			fileName - char array giving the location of the
+			chromosome dot file to be saved.
+
+		See Also:
+			<saveChromosome> <saveChromosomeLatex>
+	*/
+	DLL_EXPORT void saveChromosomeDot(struct chromosome *chromo, int weights, char const *fileName);
+
+
+	/*
+		Function: saveChromosomeLatex
+
+			Saves the given <chromosome> to a latex .tex file for visulisation and inclusion in
+			written workes.
+
+			LaTeX (www.http://latex-project.org/intro.html) is a free open
+			source document preparation system. Once installed LaTeX can be used to draw the
+			<chromosomes> saved using <saveChromosomeLatex> with the following
+			command.
+
+			(begin code)
+			latex chromosome.tex
+			(end)
+
+			or
+
+			(begin code)
+			pdflatex chromosome.tex
+			(end)
+
+		Note:
+			This function is only compatible with feed-forward networks.
+
+
+		Parameters:
+			chromo - pointer to chromosome structure.
+			weights - whether or not to include connection weights, 0 - without weights, 1 - with weights.
+			fileName - char array giving the location of the chromosome dot file to be saved.
+
+		See Also:
+			<saveChromosome> <saveChromosomeLatex>
+	*/
+	DLL_EXPORT void saveChromosomeLatex(struct chromosome *chromo, int weights, char const *fileName);
+
+
+	/*
+		Function: compareChromosomes
+			Compares the two given chromosomes.
+
+		Parameters:
+			chromoA - pointer to <chromosome> structure.
+			chromoB - pointer to <chromosome> structure.
+
+		Returns:
+			Whether or not the two chromosomes are the same: 0 no, 1 yes.
+
+		Note:
+			This function does *not* compare connections weight. For this use <compareChromosomesANN>.
+
+	*/
+	DLL_EXPORT int compareChromosomes(struct chromosome *chromoA, struct chromosome *chromoB);
+
+
+	/*
+		Function: compareChromosomesANN
+			Compares the two given chromosomes.
+
+		Parameters:
+			chromoA - pointer to <chromosome> structure.
+			chromoB - pointer to <chromosome> structure.
+
+		Returns:
+			Whether or not the two chromosomes are the same: 0 no, 1 yes.
+
+		Note:
+			This function compares connections weight.
+
+		See Also:
+			<compareChromosomes>
+
+	*/
+	DLL_EXPORT int compareChromosomesANN(struct chromosome *chromoA, struct chromosome *chromoB);
+
+
+	/*
+		Function: compareChromosomesActiveNodes
+			Compares the active genes of the two given chromosomes.
+
+		Parameters:
+			chromoA - pointer to <chromosome> structure.
+			chromoB - pointer to <chromosome> structure.
+
+		Returns:
+			Whether or not the two chromosomes active nodes are the same: 0 no, 1 yes.
+
+		Note:
+			This function does *not* compare connections weight. For this use <compareChromosomesActiveNodesANN>.
+
+	*/
+	DLL_EXPORT int compareChromosomesActiveNodes(struct chromosome *chromoA, struct chromosome *chromoB);
+
+
+	/*
+		Function: compareChromosomesActiveNodesANN
+			Compares the active genes of the two given chromosomes.
+
+		Parameters:
+			chromoA - pointer to <chromosome> structure.
+			chromoB - pointer to <chromosome> structure.
+
+		Returns:
+			Whether or not the two chromosomes active nodes are the same: 0 no, 1 yes.
+
+		Note:
+			This function compares connections weight.
+
+		See Also:
+			<compareChromosomes>
+
+	*/
+	DLL_EXPORT int compareChromosomesActiveNodesANN(struct chromosome *chromoA, struct chromosome *chromoB);
+
+
+
+	/*
+		Function: mutateChromosome
+			Mutate the given chromosome using the mutation method described in the given <parameters>.
+
+		Parameters:
+			params - pointer to <parameters> structure
+			chromo - pointer to chromosome structure.
 
 		Example:
-			See <executeChromosome>
 
-	See Also:
-			<executeChromosome>
-*/
-DLL_EXPORT double getChromosomeOutput(struct chromosome *chromo, int output);
+			(begin code)
+			struct parameters *params;
+			struct chromosome *chromo;
+
+			params = initialiseParameters(3,10,2,2);
+			chromo = initialiseChromosome(params);
+
+			mutateChromosome(params, chromo);
+			(end)
+	*/
+	DLL_EXPORT void mutateChromosome(struct parameters *params, struct chromosome *chromo);
+
+
+	/*
+		Function: removeInactiveNodes
+			Removes all of the inactive nodes from the given chromosome.
+
+		Note:
+			This operation causes the number of nodes in the chromosome to change.
+
+		Parameters:
+			chromo - pointer to chromosome structure.
+	*/
+	DLL_EXPORT void removeInactiveNodes(struct chromosome *chromo);
+
+	/*
+		Function: setChromosomeFitness
+			Sets the fitness of the chromosome using the fitness function given in the <parameters>
+
+		Parameters:
+			params - pointer to <parameters> structure
+			chromo - pointer to chromosome structure.
+			data - pointer to the data used by the fitness function (NULL if not used)
+
+		See Also:
+			<getChromosomeFitness>
+	*/
+	DLL_EXPORT void setChromosomeFitness(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
 
 
 
-/*
-	Function: getChromosomeNodeValue
-		Gets the node value of the given chromosome and node *after* it has been executed using <executeChromosome>.
+	/*
+		Function: resetChromosome
+			Resets all of the chromosome nodes to output zero.
 
-		After a given chromosome has been executed using <executeChromosome> the chromosome node values are made available using <getChromosomeNodeValue>.
+		Note:
+			This is useful when using recurrent connections where you do not want the output to be a function of the current state of the chromosome.
+	*/
+	DLL_EXPORT void resetChromosome(struct chromosome *chromo);
+
+
+	/*
+		Function: copyChromosome
+
+		Copies the contents of one chromoosme into the other.
+
+		In order for copy chromosome to opperate correctly the dimensions of the chromosomes must match i.e. the number of inputs, nodes, outputs and node arity must be the same.
+
+		Parameters:
+			chromoDest - pointer to an initialised chromosome to be copied too
+			chromoSrc - pointer to an initialised chromosome to be copied from
+
+		See Also:
+			<initialiseChromosome>
+
+	*/
+	DLL_EXPORT void copyChromosome(struct chromosome *chromoDest, struct chromosome *chromoSrc);
+
+
+	/*
+		Function: getNumChromosomeInputs
+			Gets the number of chromosome inputs
 
 		Parameters:
 			chromo - pointer to an initialised chromosome structure.
-			output - The index of the node value to be retrieved
 
-	See Also:
-			<executeChromosome>, <getChromosomeOutput>
-*/
-DLL_EXPORT double getChromosomeNodeValue(struct chromosome *chromo, int node);
+		Returns:
+			Number number of chromosome inputs
+
+		See Also:
+			<initialiseChromosome>
+	*/
+	DLL_EXPORT int getNumChromosomeInputs(struct chromosome *chromo);
 
 
-/*
-	Function: isNodeActive
-		Returns whether the given node in the given chromosome is active. 1-active, 0-inactive
 
-		If the given node index is less than zero or greater then the number of nodes in the given chromosome and error message is displayed and the program will terminate.
+	/*
+		Function: getNumChromosomeNodes
+			Gets the number of chromosome nodes
 
 		Parameters:
 			chromo - pointer to an initialised chromosome structure.
-			node - The index of the node
-*/
-DLL_EXPORT int isNodeActive(struct chromosome *chromo, int node);
+
+		Returns:
+			Number number of chromosome nodes
+
+		See Also:
+			<initialiseChromosome>
+	*/
+	DLL_EXPORT int getNumChromosomeNodes(struct chromosome *chromo);
+
+	/*
+		Function: getNumChromosomeActiveNodes
+			Gets the number of chromosome active nodes
+
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
+
+		Returns:
+			Number number of chromosome active nodes
+
+		See Also:
+			<initialiseChromosome>
+	*/
+	DLL_EXPORT int getNumChromosomeActiveNodes(struct chromosome *chromo);
 
 
-/*
-	Function: saveChromosome
-		Saves the given chromosome to a file which can used to initialise new chromosomes.
+	/*
+		Function: getNumChromosomeOutputs
+			Gets the number of chromosome outputs
 
-		New chromosomes can be initialised using the saved chromosomes by calling <initialiseChromosomeFromFile>.
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
 
-	Note:
-		Only chromosome which use node functions defined by the CGP-library can be loaded. Chromosomes which use custom node functions cannot be loaded.
+		Returns:
+			Number number of chromosome outputs
 
-	Parameters:
-		chromo - pointer to chromosome structure.
-		fileName - char array giving the location of the chromosome to be saved.
-
-	See Also:
-		<initialiseChromosomeFromFile>, <saveChromosomeDot> <saveChromosomeLatex>
-*/
-DLL_EXPORT void saveChromosome(struct chromosome *chromo, char const *fileName);
-
-/*
-	Function: saveChromosomeDot
-
-		Saves the given <chromosome> to a graphviz .dot file.
-
-		graphviz (www.graphviz.org) is a free open source graph
-		drawing tool. Once installed graphviz can be used to draw the
-		<chromosomes> saved using <saveChromosomeDot> with the following
-		command.
-
-		(begin code)
-		dot -Tsvg chromosome.dot -o chromosome.svg
-		(end)
-
-	Parameters:
-		chromo - pointer to chromosome structure.
-		weights - whether or not to include connection weights, 0 - without weights, 1 - with weights.
-		fileName - char array giving the location of the
-		chromosome dot file to be saved.
-
-	See Also:
-		<saveChromosome> <saveChromosomeLatex>
-*/
-DLL_EXPORT void saveChromosomeDot(struct chromosome *chromo, int weights, char const *fileName);
+		See Also:
+			<initialiseChromosome>
+	*/
+	DLL_EXPORT int getNumChromosomeOutputs(struct chromosome *chromo);
 
 
-/*
-	Function: saveChromosomeLatex
+	/*
+		Function: getChromosomeNodeArity
+			Gets the arity of the chromosome nodes
 
-		Saves the given <chromosome> to a latex .tex file for visulisation and inclusion in
-		written workes.
+		Parameters:
+			chromo - pointer to an initialised chromosome structure.
+			index - index of chromosome node
 
-		LaTeX (www.http://latex-project.org/intro.html) is a free open
-		source document preparation system. Once installed LaTeX can be used to draw the
-		<chromosomes> saved using <saveChromosomeLatex> with the following
-		command.
+		Returns:
+			Arity of chromosome nodes
 
-		(begin code)
-		latex chromosome.tex
-		(end)
-
-		or
-
-		(begin code)
-		pdflatex chromosome.tex
-		(end)
-
-	Note:
-		This function is only compatible with feed-forward networks.
+		See Also:
+			<initialiseChromosome>
+	*/
+	DLL_EXPORT int getChromosomeNodeArity(struct chromosome *chromo, int index);
 
 
-	Parameters:
-		chromo - pointer to chromosome structure.
-		weights - whether or not to include connection weights, 0 - without weights, 1 - with weights.
-		fileName - char array giving the location of the chromosome dot file to be saved.
+	/*
+		Function: getChromosomeFitness
+			Gets the fitness of the given chromosome
 
-	See Also:
-		<saveChromosome> <saveChromosomeLatex>
-*/
-DLL_EXPORT void saveChromosomeLatex(struct chromosome *chromo, int weights, char const *fileName);
+		Parameters:
+			chromo - pointer to initialised chromosome structure.
 
+		Returns:
+			The fitness of the given chromosome
 
-/*
-	Function: compareChromosomes
-		Compares the two given chromosomes.
+		See Also:
+			<setChromosomeFitness> <getChromosomeGenerations> <getNumChromosomeActiveNodes>
+	*/
+	DLL_EXPORT double getChromosomeFitness(struct chromosome *chromo);
 
-	Parameters:
-		chromoA - pointer to <chromosome> structure.
-		chromoB - pointer to <chromosome> structure.
+	/*
+		Function: getNumChromosomeActiveConnections
+			Gets the number of active connections in the given chromosome
 
-	Returns:
-		Whether or not the two chromosomes are the same: 0 no, 1 yes.
+		Parameters:
+			chromo - pointer to initialised chromosome structure.
 
-	Note:
-		This function does *not* compare connections weight. For this use <compareChromosomesANN>.
+		Returns:
+			The number of active connections
 
-*/
-DLL_EXPORT int compareChromosomes(struct chromosome *chromoA, struct chromosome *chromoB);
+		See Also:
+			<getNumChromosomeActiveNodes>
+	*/
+	DLL_EXPORT int getNumChromosomeActiveConnections(struct chromosome *chromo);
 
+	/*
+		Function: getChromosomeGenerations
+			Gets the number of generations for which the given chromosome has been trained.
 
-/*
-	Function: compareChromosomesANN
-		Compares the two given chromosomes.
+			If the chromosome has not been trained then -1 is returned.
 
-	Parameters:
-		chromoA - pointer to <chromosome> structure.
-		chromoB - pointer to <chromosome> structure.
+		Parameters:
+			chromo - pointer to initialised chromosome structure.
 
-	Returns:
-		Whether or not the two chromosomes are the same: 0 no, 1 yes.
+		Returns:
+			Number of generations for which the given chromosome has been trained
 
-	Note:
-		This function compares connections weight.
-
-	See Also:
-		<compareChromosomes>
-
-*/
-DLL_EXPORT int compareChromosomesANN(struct chromosome *chromoA, struct chromosome *chromoB);
+		See Also:
+			<getChromosomeFitness> <getNumChromosomeActiveNodes>
+	*/
+	DLL_EXPORT int getChromosomeGenerations(struct chromosome *chromo);
 
 
-/*
-	Function: compareChromosomesActiveNodes
-		Compares the active genes of the two given chromosomes.
+	/*
+		Title: DataSet Functions
 
-	Parameters:
-		chromoA - pointer to <chromosome> structure.
-		chromoB - pointer to <chromosome> structure.
+		Description of all functions and structures relating to data sets
+	*/
 
-	Returns:
-		Whether or not the two chromosomes active nodes are the same: 0 no, 1 yes.
+	/*
+		Function: initialiseDataSetFromArrays
 
-	Note:
-		This function does *not* compare connections weight. For this use <compareChromosomesActiveNodesANN>.
+		Initialises a <dataSet> structures using the given input output pairs.
 
-*/
-DLL_EXPORT int compareChromosomesActiveNodes(struct chromosome *chromoA, struct chromosome *chromoB);
-
-
-/*
-	Function: compareChromosomesActiveNodesANN
-		Compares the active genes of the two given chromosomes.
-
-	Parameters:
-		chromoA - pointer to <chromosome> structure.
-		chromoB - pointer to <chromosome> structure.
-
-	Returns:
-		Whether or not the two chromosomes active nodes are the same: 0 no, 1 yes.
-
-	Note:
-		This function compares connections weight.
-
-	See Also:
-		<compareChromosomes>
-
-*/
-DLL_EXPORT int compareChromosomesActiveNodesANN(struct chromosome *chromoA, struct chromosome *chromoB);
-
-
-
-/*
-	Function: mutateChromosome
-		Mutate the given chromosome using the mutation method described in the given <parameters>.
-
-	Parameters:
-		params - pointer to <parameters> structure
-		chromo - pointer to chromosome structure.
-
-	Example:
+		The given arrays containing the input output pairs must take the form
 
 		(begin code)
-		struct parameters *params;
-		struct chromosome *chromo;
-
-		params = initialiseParameters(3,10,2,2);
-		chromo = initialiseChromosome(params);
-
-		mutateChromosome(params, chromo);
-		(end)
-*/
-DLL_EXPORT void mutateChromosome(struct parameters *params, struct chromosome *chromo);
-
-
-/*
-	Function: removeInactiveNodes
-		Removes all of the inactive nodes from the given chromosome.
-
-	Note:
-		This operation causes the number of nodes in the chromosome to change.
-
-	Parameters:
-		chromo - pointer to chromosome structure.
-*/
-DLL_EXPORT void removeInactiveNodes(struct chromosome *chromo);
-
-/*
-	Function: setChromosomeFitness
-		Sets the fitness of the chromosome using the fitness function given in the <parameters>
-
-	Parameters:
-		params - pointer to <parameters> structure
-		chromo - pointer to chromosome structure.
-		data - pointer to the data used by the fitness function (NULL if not used)
-
-	See Also:
-		<getChromosomeFitness>
-*/
-DLL_EXPORT void setChromosomeFitness(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
-
-
-
-/*
-	Function: resetChromosome
-		Resets all of the chromosome nodes to output zero.
-
-	Note:
-		This is useful when using recurrent connections where you do not want the output to be a function of the current state of the chromosome.
-*/
-DLL_EXPORT void resetChromosome(struct chromosome *chromo);
-
-
-/*
-	Function: copyChromosome
-
-	Copies the contents of one chromoosme into the other.
-
-	In order for copy chromosome to opperate correctly the dimensions of the chromosomes must match i.e. the number of inputs, nodes, outputs and node arity must be the same.
-
-	Parameters:
-		chromoDest - pointer to an initialised chromosome to be copied too
-		chromoSrc - pointer to an initialised chromosome to be copied from
-
-	See Also:
-		<initialiseChromosome>
-
-*/
-DLL_EXPORT void copyChromosome(struct chromosome *chromoDest, struct chromosome *chromoSrc);
-
-
-/*
-	Function: getNumChromosomeInputs
-		Gets the number of chromosome inputs
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	Returns:
-		Number number of chromosome inputs
-
-	See Also:
-		<initialiseChromosome>
-*/
-DLL_EXPORT int getNumChromosomeInputs(struct chromosome *chromo);
-
-
-
-/*
-	Function: getNumChromosomeNodes
-		Gets the number of chromosome nodes
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	Returns:
-		Number number of chromosome nodes
-
-	See Also:
-		<initialiseChromosome>
-*/
-DLL_EXPORT int getNumChromosomeNodes(struct chromosome *chromo);
-
-/*
-	Function: getNumChromosomeActiveNodes
-		Gets the number of chromosome active nodes
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	Returns:
-		Number number of chromosome active nodes
-
-	See Also:
-		<initialiseChromosome>
-*/
-DLL_EXPORT int getNumChromosomeActiveNodes(struct chromosome *chromo);
-
-
-/*
-	Function: getNumChromosomeOutputs
-		Gets the number of chromosome outputs
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-
-	Returns:
-		Number number of chromosome outputs
-
-	See Also:
-		<initialiseChromosome>
-*/
-DLL_EXPORT int getNumChromosomeOutputs(struct chromosome *chromo);
-
-
-/*
-	Function: getChromosomeNodeArity
-		Gets the arity of the chromosome nodes
-
-	Parameters:
-		chromo - pointer to an initialised chromosome structure.
-		index - index of chromosome node
-
-	Returns:
-		Arity of chromosome nodes
-
-	See Also:
-		<initialiseChromosome>
-*/
-DLL_EXPORT int getChromosomeNodeArity(struct chromosome *chromo, int index);
-
-
-/*
-	Function: getChromosomeFitness
-		Gets the fitness of the given chromosome
-
-	Parameters:
-		chromo - pointer to initialised chromosome structure.
-
-	Returns:
-		The fitness of the given chromosome
-
-	See Also:
-		<setChromosomeFitness> <getChromosomeGenerations> <getNumChromosomeActiveNodes>
-*/
-DLL_EXPORT double getChromosomeFitness(struct chromosome *chromo);
-
-/*
-	Function: getNumChromosomeActiveConnections
-		Gets the number of active connections in the given chromosome
-
-	Parameters:
-		chromo - pointer to initialised chromosome structure.
-
-	Returns:
-		The number of active connections
-
-	See Also:
-		<getNumChromosomeActiveNodes>
-*/
-DLL_EXPORT int getNumChromosomeActiveConnections(struct chromosome *chromo);
-
-/*
-	Function: getChromosomeGenerations
-		Gets the number of generations for which the given chromosome has been trained.
-
-		If the chromosome has not been trained then -1 is returned.
-
-	Parameters:
-		chromo - pointer to initialised chromosome structure.
-
-	Returns:
-		Number of generations for which the given chromosome has been trained
-
-	See Also:
-		<getChromosomeFitness> <getNumChromosomeActiveNodes>
-*/
-DLL_EXPORT int getChromosomeGenerations(struct chromosome *chromo);
-
-
-/*
-	Title: DataSet Functions
-
-	Description of all functions and structures relating to data sets
-*/
-
-/*
-	Function: initialiseDataSetFromArrays
-
-	Initialises a <dataSet> structures using the given input output pairs.
-
-	The given arrays containing the input output pairs must take the form
-
-	(begin code)
-	double inputs[numSamples][numInputs]
-	double outputs[numSamples][numOutputs]
-	(end)
-
-	Where the numInputs and numOutputs are the number of inputs and outputs per sample.
-
-	Parameters:
-		numInputs - number of inputs per data sample
-		numOutputs - number of outputs per data sample
-		numSamples - number of data samples
-		inputs - pointer to the first element in the inputs to be stored to the data structure
-		outputs - pointer to the first element in outputs to be stored to the data structure
-
-	Returns:
-		A pointer to an initialised <dataSet> structure.
-
-	Example:
-
-		Initialising a <dataSet> to contain the input output pairs for a full adder truth table.
-
-		(begin code)
-		struct data *trainingData;
-
-		int numInputs = 3;
-		int numOutputs = 2;
-		int numSamples = 8;
-
-		// full adder input output pairs
-		double inputs[8][3] = {{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}};
-		double outputs[8][2] = {{0,0},{1,0},{1,0},{0,1},{1,0},{0,1},{0,1},{1,1}};
-
-		trainingData = initialiseDataFromArrays(numInputs, numOutputs, numSamples, inputs[0], outputs[0]);
+		double inputs[numSamples][numInputs]
+		double outputs[numSamples][numOutputs]
 		(end)
 
-	See Also:
-		<freeDataSet>, <initialiseDataSetFromFile>, <printDataSet>
-*/
-DLL_EXPORT struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs, int numSamples, double *inputs, double *outputs);
+		Where the numInputs and numOutputs are the number of inputs and outputs per sample.
 
+		Parameters:
+			numInputs - number of inputs per data sample
+			numOutputs - number of outputs per data sample
+			numSamples - number of data samples
+			inputs - pointer to the first element in the inputs to be stored to the data structure
+			outputs - pointer to the first element in outputs to be stored to the data structure
 
-/*
-	Function: initialiseDataSetFromFile
+		Returns:
+			A pointer to an initialised <dataSet> structure.
 
-	Initialises a <dataSet> structures using the given file.
+		Example:
 
-	Parameters:
-		file - the location of the file to be loaded into the <dataSet> structure
+			Initialising a <dataSet> to contain the input output pairs for a full adder truth table.
 
-	Returns:
-		A pointer to an initialised <dataSet> structure.
+			(begin code)
+			struct data *trainingData;
 
-	Example:
+			int numInputs = 3;
+			int numOutputs = 2;
+			int numSamples = 8;
 
-		The file containing the <dataSet> must take the form
+			// full adder input output pairs
+			double inputs[8][3] = {{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}};
+			double outputs[8][2] = {{0,0},{1,0},{1,0},{0,1},{1,0},{0,1},{0,1},{1,1}};
 
-		> 2,3,4
-		> 1,2,3,4,5
-		> 6,7,8,9,10
-		> 11,12,13,14,15
-		> 16,17,18,19,20
+			trainingData = initialiseDataFromArrays(numInputs, numOutputs, numSamples, inputs[0], outputs[0]);
+			(end)
 
-		Where the header describes the number of inputs, number of outputs and the number of samples. The rest of the file gives the inputs and then the outputs of each sample on a new line. All values are comma separated.
+		See Also:
+			<freeDataSet>, <initialiseDataSetFromFile>, <printDataSet>
+	*/
+	DLL_EXPORT struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs, int numSamples, double *inputs, double *outputs);
 
-		The file can then be used to initialise a <dataSet> structure.
 
-		(begin code)
-		struct dataSet *trainingData;
+	/*
+		Function: initialiseDataSetFromFile
 
-		trainingData = initialiseDataFromFile("file");
-		(end)
+		Initialises a <dataSet> structures using the given file.
 
-	See Also:
-		<freeDataSet>, <initialiseDataSetFromArrays>, <printDataSet>
-*/
-DLL_EXPORT struct dataSet *initialiseDataSetFromFile(char const *file);
+		Parameters:
+			file - the location of the file to be loaded into the <dataSet> structure
 
+		Returns:
+			A pointer to an initialised <dataSet> structure.
 
-/*
-	Function: freeDataSet
+		Example:
 
-	Frees <dataSet> instance.
+			The file containing the <dataSet> must take the form
 
-	Parameters:
-		data - pointer to dataSet structure.
+			> 2,3,4
+			> 1,2,3,4,5
+			> 6,7,8,9,10
+			> 11,12,13,14,15
+			> 16,17,18,19,20
 
-	See Also:
-		<initialiseDataSetFromArrays>, <initialiseDataSetFromFile>
-*/
-DLL_EXPORT void freeDataSet(struct dataSet *data);
+			Where the header describes the number of inputs, number of outputs and the number of samples. The rest of the file gives the inputs and then the outputs of each sample on a new line. All values are comma separated.
 
-/*
-	Function: printDataSet
+			The file can then be used to initialise a <dataSet> structure.
 
-	Prints the input output pairs held by a <dataSet> structure to the terminal.
+			(begin code)
+			struct dataSet *trainingData;
 
-	Parameters:
-		data - pointer to <dataSet> structure.
+			trainingData = initialiseDataFromFile("file");
+			(end)
 
-	See Also:
-		<initialiseDataSetFromArrays>, <initialiseDataSetFromFile>, <freeDataSet>
-*/
-DLL_EXPORT void printDataSet(struct dataSet *data);
+		See Also:
+			<freeDataSet>, <initialiseDataSetFromArrays>, <printDataSet>
+	*/
+	DLL_EXPORT struct dataSet *initialiseDataSetFromFile(char const *file);
 
 
-/*
-	Function: saveDataSet
+	/*
+		Function: freeDataSet
 
-	Saves the given <dataSet> to a file which can be read using <initialiseDataSetFromFile>.
+		Frees <dataSet> instance.
 
-	Parameters:
-		data - pointer to <dataSet> structure.
-		fileName - char array giving the location of the dataSet to be saved.
+		Parameters:
+			data - pointer to dataSet structure.
 
-	See Also:
-		<initialiseDataSetFromFile>, <freeDataSet>
-*/
-DLL_EXPORT void saveDataSet(struct dataSet *data, char const *fileName);
+		See Also:
+			<initialiseDataSetFromArrays>, <initialiseDataSetFromFile>
+	*/
+	DLL_EXPORT void freeDataSet(struct dataSet *data);
 
+	/*
+		Function: printDataSet
 
-/*
-	Function: getNumDataSetInputs
-		Gets the number of <dataSet> inputs.
+		Prints the input output pairs held by a <dataSet> structure to the terminal.
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure.
+		Parameters:
+			data - pointer to <dataSet> structure.
 
-	Returns:
-		Number number of dataSet inputs
+		See Also:
+			<initialiseDataSetFromArrays>, <initialiseDataSetFromFile>, <freeDataSet>
+	*/
+	DLL_EXPORT void printDataSet(struct dataSet *data);
 
-	See Also:
-		<getNumDataSetOutputs>, <getNumDataSetSamples>
-*/
-DLL_EXPORT int getNumDataSetInputs(struct dataSet *data);
 
+	/*
+		Function: saveDataSet
 
+		Saves the given <dataSet> to a file which can be read using <initialiseDataSetFromFile>.
 
-/*
-	Function: getNumDataSetOutputs
-		Gets the number of <dataSet> outputs.
+		Parameters:
+			data - pointer to <dataSet> structure.
+			fileName - char array giving the location of the dataSet to be saved.
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure.
+		See Also:
+			<initialiseDataSetFromFile>, <freeDataSet>
+	*/
+	DLL_EXPORT void saveDataSet(struct dataSet *data, char const *fileName);
 
-	Returns:
-		Number number of <dataSet> outputs
 
-	See Also:
-		<getNumDataSetInputs>, <getNumDataSetSamples>
-*/
-DLL_EXPORT int getNumDataSetOutputs(struct dataSet *data);
+	/*
+		Function: getNumDataSetInputs
+			Gets the number of <dataSet> inputs.
 
+		Parameters:
+			data - pointer to an initialised <dataSet> structure.
 
-/*
-	Function: getNumDataSetSamples
-		Gets the number of samples in the given <dataSet>.
+		Returns:
+			Number number of dataSet inputs
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure.
+		See Also:
+			<getNumDataSetOutputs>, <getNumDataSetSamples>
+	*/
+	DLL_EXPORT int getNumDataSetInputs(struct dataSet *data);
 
-	Returns:
-		Number number of <dataSet> samples
 
-	See Also:
-		<getNumDataSetInputs>, <getNumDataSetOutputs>
-*/
-DLL_EXPORT int getNumDataSetSamples(struct dataSet *data);
 
+	/*
+		Function: getNumDataSetOutputs
+			Gets the number of <dataSet> outputs.
 
-/*
-	Function: getDataSetSampleInputs
-		Gets the <dataSet> inputs for the given sample index.
+		Parameters:
+			data - pointer to an initialised <dataSet> structure.
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure.
-		sample - index of the sample inputs
+		Returns:
+			Number number of <dataSet> outputs
 
-	Returns:
-		Pointer to an array containing the sample inputs.
+		See Also:
+			<getNumDataSetInputs>, <getNumDataSetSamples>
+	*/
+	DLL_EXPORT int getNumDataSetOutputs(struct dataSet *data);
 
-	See Also:
-		<getDataSetSampleInput>, <getDataSetSampleOutputs>, <getDataSetSampleOutput>
-*/
-DLL_EXPORT double *getDataSetSampleInputs(struct dataSet *data, int sample);
 
+	/*
+		Function: getNumDataSetSamples
+			Gets the number of samples in the given <dataSet>.
 
-/*
-	Function: getDataSetSampleInput
-		Gets the <dataSet> input for the given sample index and input index.
+		Parameters:
+			data - pointer to an initialised <dataSet> structure.
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure
-		sample - index of the sample inputs
-		input - index of the input for the given sample
+		Returns:
+			Number number of <dataSet> samples
 
-	Returns:
-		The input value for the given input of the given sample.
+		See Also:
+			<getNumDataSetInputs>, <getNumDataSetOutputs>
+	*/
+	DLL_EXPORT int getNumDataSetSamples(struct dataSet *data);
 
-	See Also:
-		<getDataSetSampleInputs>, <getDataSetSampleOutput>, <getDataSetSampleOutputs>
-*/
-DLL_EXPORT double getDataSetSampleInput(struct dataSet *data, int sample, int input);
 
+	/*
+		Function: getDataSetSampleInputs
+			Gets the <dataSet> inputs for the given sample index.
 
-/*
-	Function: getDataSetSampleOutputs
-		Gets the <dataSet> outputs for the given sample index.
+		Parameters:
+			data - pointer to an initialised <dataSet> structure.
+			sample - index of the sample inputs
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure
-		sample - index of the sample outputs
+		Returns:
+			Pointer to an array containing the sample inputs.
 
-	Returns:
-		Pointer to an array containing the sample outputs.
+		See Also:
+			<getDataSetSampleInput>, <getDataSetSampleOutputs>, <getDataSetSampleOutput>
+	*/
+	DLL_EXPORT double *getDataSetSampleInputs(struct dataSet *data, int sample);
 
-	See Also:
-		<getDataSetSampleOutput>, <getDataSetSampleInputs>, <getDataSetSampleInput>
-*/
-DLL_EXPORT double *getDataSetSampleOutputs(struct dataSet *data, int sample);
 
-/*
-	Function: getDataSetSampleOutput
-		Gets the <dataSet> output for the given sample index and output index.
+	/*
+		Function: getDataSetSampleInput
+			Gets the <dataSet> input for the given sample index and input index.
 
-	Parameters:
-		data - pointer to an initialised <dataSet> structure.
-		sample - index of the sample inputs
-		output - index of the output for the given sample
+		Parameters:
+			data - pointer to an initialised <dataSet> structure
+			sample - index of the sample inputs
+			input - index of the input for the given sample
 
-	Returns:
-		The output value for the given output for the given sample.
+		Returns:
+			The input value for the given input of the given sample.
 
-	See Also:
-		<getDataSetSampleOutputs>, <getDataSetSampleInput>, <getDataSetSampleInputs>
-*/
-DLL_EXPORT double getDataSetSampleOutput(struct dataSet *data, int sample, int output);
+		See Also:
+			<getDataSetSampleInputs>, <getDataSetSampleOutput>, <getDataSetSampleOutputs>
+	*/
+	DLL_EXPORT double getDataSetSampleInput(struct dataSet *data, int sample, int input);
 
 
-/*
-	Title: Results Functions
-*/
+	/*
+		Function: getDataSetSampleOutputs
+			Gets the <dataSet> outputs for the given sample index.
 
-/*
-	Function: freeResults
+		Parameters:
+			data - pointer to an initialised <dataSet> structure
+			sample - index of the sample outputs
 
-	Frees <results> instance.
+		Returns:
+			Pointer to an array containing the sample outputs.
 
-	An initialised <results> structure is returned from <repeatCGP> when applied CGP to a task multiple times in order to assess average behaviour.
+		See Also:
+			<getDataSetSampleOutput>, <getDataSetSampleInputs>, <getDataSetSampleInput>
+	*/
+	DLL_EXPORT double *getDataSetSampleOutputs(struct dataSet *data, int sample);
 
-	Parameters:
-		rels - pointer to results structure.
+	/*
+		Function: getDataSetSampleOutput
+			Gets the <dataSet> output for the given sample index and output index.
 
-	See Also:
-		<repeatCGP>
-*/
-DLL_EXPORT void freeResults(struct results *rels);
+		Parameters:
+			data - pointer to an initialised <dataSet> structure.
+			sample - index of the sample inputs
+			output - index of the output for the given sample
 
-/*
-	Function: saveResults
+		Returns:
+			The output value for the given output for the given sample.
 
-		Saves the given <results> to a csv file.
+		See Also:
+			<getDataSetSampleOutputs>, <getDataSetSampleInput>, <getDataSetSampleInputs>
+	*/
+	DLL_EXPORT double getDataSetSampleOutput(struct dataSet *data, int sample, int output);
 
-	Parameters:
-		els - pointer to an initialised results structure.
-		fileName - char array giving the location of the <results> to be saved.
-*/
-DLL_EXPORT void saveResults(struct results *rels, char const *fileName);
 
+	/*
+		Title: Results Functions
+	*/
 
-/*
-	Function: getChromosome
-		Gets a copy of the best chromosome found on the given run in an initialised <results> structure.
+	/*
+		Function: freeResults
 
-	Parameters:
-		rels - pointer to an initialised results structure.
-		run - the run for which the chromosome is got
+		Frees <results> instance.
 
-	Returns:
-		Pointer to an initialised chromosome structure.
+		An initialised <results> structure is returned from <repeatCGP> when applied CGP to a task multiple times in order to assess average behaviour.
 
-	See Also:
-		<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
-*/
-DLL_EXPORT struct chromosome* getChromosome(struct results *rels, int run);
+		Parameters:
+			rels - pointer to results structure.
 
-/*
-	Function: getNumChromosomes
-		Gets number of chromosomes stored in the given results structure.
+		See Also:
+			<repeatCGP>
+	*/
+	DLL_EXPORT void freeResults(struct results *rels);
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+	/*
+		Function: saveResults
 
-	Returns:
-		The number of chromosomes stored in the given results structure
+			Saves the given <results> to a csv file.
 
-	See Also:
-		<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
-*/
-DLL_EXPORT int getNumChromosomes(struct results *rels);
+		Parameters:
+			els - pointer to an initialised results structure.
+			fileName - char array giving the location of the <results> to be saved.
+	*/
+	DLL_EXPORT void saveResults(struct results *rels, char const *fileName);
 
-/*
-	Function: getAverageFitness
-		Gets the average fitness of the best chromosome found for each run in results.
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+	/*
+		Function: getChromosome
+			Gets a copy of the best chromosome found on the given run in an initialised <results> structure.
 
-	Returns:
-		The average fitness of the best chromosome found for each run in results.
+		Parameters:
+			rels - pointer to an initialised results structure.
+			run - the run for which the chromosome is got
 
-	See Also:
-		<repeatCGP>, <getAverageActiveNodes>, <getAverageGenerations>
-*/
-DLL_EXPORT double getAverageFitness(struct results *rels);
+		Returns:
+			Pointer to an initialised chromosome structure.
 
+		See Also:
+			<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
+	*/
+	DLL_EXPORT struct chromosome* getChromosome(struct results *rels, int run);
 
-/*
-	Function: getMedianFitness
-		Gets the median fitness of the best chromosome found for each run in results.
+	/*
+		Function: getNumChromosomes
+			Gets number of chromosomes stored in the given results structure.
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+		Parameters:
+			rels - pointer to an initialised results structure.
 
-	Returns:
-		The median fitness of the best chromosome found for each run in results.
+		Returns:
+			The number of chromosomes stored in the given results structure
 
-	See Also:
-		<repeatCGP>, <getMedianActiveNodes>, <getMedianGenerations>
-*/
-DLL_EXPORT double getMedianFitness(struct results *rels);
+		See Also:
+			<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>, <getAverageGenerations>
+	*/
+	DLL_EXPORT int getNumChromosomes(struct results *rels);
 
+	/*
+		Function: getAverageFitness
+			Gets the average fitness of the best chromosome found for each run in results.
 
-/*
-	Function: getAverageActiveNodes
-		Gets the average number of active nodes of the best chromosome found for each run in results.
+		Parameters:
+			rels - pointer to an initialised results structure.
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+		Returns:
+			The average fitness of the best chromosome found for each run in results.
 
-	Returns:
-		The average number of active nodes of the best chromosome found for each run in results.
+		See Also:
+			<repeatCGP>, <getAverageActiveNodes>, <getAverageGenerations>
+	*/
+	DLL_EXPORT double getAverageFitness(struct results *rels);
 
-	See Also:
-		<repeatCGP>, <getAverageFitness>, <getAverageGenerations>
 
-*/
-DLL_EXPORT double getAverageActiveNodes(struct results *rels);
+	/*
+		Function: getMedianFitness
+			Gets the median fitness of the best chromosome found for each run in results.
 
-/*
-	Function: getMedianActiveNodes
-		Gets the median number of active nodes of the best chromosome found for each run in results.
+		Parameters:
+			rels - pointer to an initialised results structure.
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+		Returns:
+			The median fitness of the best chromosome found for each run in results.
 
-	Returns:
-		The median number of active nodes of the best chromosome found for each run in results.
+		See Also:
+			<repeatCGP>, <getMedianActiveNodes>, <getMedianGenerations>
+	*/
+	DLL_EXPORT double getMedianFitness(struct results *rels);
 
-	See Also:
-		<repeatCGP>, <getMedianFitness>, <getMedianGenerations>
 
-*/
-DLL_EXPORT double getMedianActiveNodes(struct results *rels);
+	/*
+		Function: getAverageActiveNodes
+			Gets the average number of active nodes of the best chromosome found for each run in results.
 
+		Parameters:
+			rels - pointer to an initialised results structure.
 
-/*
-	Function: getAverageGenerations
-		Gets the average number generations required to find the best best chromosome for each run in results.
+		Returns:
+			The average number of active nodes of the best chromosome found for each run in results.
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+		See Also:
+			<repeatCGP>, <getAverageFitness>, <getAverageGenerations>
 
-	Returns:
-		The average number generations required to find the best chromosome found for each run in results.
+	*/
+	DLL_EXPORT double getAverageActiveNodes(struct results *rels);
 
-	See Also:
-		<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>
+	/*
+		Function: getMedianActiveNodes
+			Gets the median number of active nodes of the best chromosome found for each run in results.
 
-*/
-DLL_EXPORT double getAverageGenerations(struct results *rels);
+		Parameters:
+			rels - pointer to an initialised results structure.
 
+		Returns:
+			The median number of active nodes of the best chromosome found for each run in results.
 
-/*
-	Function: getMedianGenerations
-		Gets the median number generations required to find the best best chromosome for each run in results.
+		See Also:
+			<repeatCGP>, <getMedianFitness>, <getMedianGenerations>
 
-	Parameters:
-		rels - pointer to an initialised results structure.
+	*/
+	DLL_EXPORT double getMedianActiveNodes(struct results *rels);
 
-	Returns:
-		The median number generations required to find the best chromosome found for each run in results.
 
-	See Also:
-		<repeatCGP>, <getMedianFitness>, <getMedianActiveNodes>
+	/*
+		Function: getAverageGenerations
+			Gets the average number generations required to find the best best chromosome for each run in results.
 
-*/
-DLL_EXPORT double getMedianGenerations(struct results *rels);
+		Parameters:
+			rels - pointer to an initialised results structure.
 
+		Returns:
+			The average number generations required to find the best chromosome found for each run in results.
 
-/*
-	Title: CGP Functions
-*/
+		See Also:
+			<repeatCGP>, <getAverageFitness>, <getAverageActiveNodes>
 
-/*
-	Function: runCGP
+	*/
+	DLL_EXPORT double getAverageGenerations(struct results *rels);
 
-	Applies CGP to the given task.
 
-	Returns the best chromosome found after applying CGP to a given task using the specified <parameters>. Depending upon the update frequency given in <parameters> (<setUpdateFrequency>) the progress made by CGP will be displayed in the terminal.
+	/*
+		Function: getMedianGenerations
+			Gets the median number generations required to find the best best chromosome for each run in results.
 
-	Note:
-		As runCGP returns an initialised chromosome this should later be free'd using <freeChromosome>.
+		Parameters:
+			rels - pointer to an initialised results structure.
 
-	Parameters:
-		params - pointer to <parameters> structure.
-		data - pointer to dataSet structure.
-		gens - the number of allowed generations before terminating the search.
+		Returns:
+			The median number generations required to find the best chromosome found for each run in results.
 
-	Returns:
-		A pointer to an initialised chromosome.
+		See Also:
+			<repeatCGP>, <getMedianFitness>, <getMedianActiveNodes>
 
-	Example:
+	*/
+	DLL_EXPORT double getMedianGenerations(struct results *rels);
 
-		(begin code)
-		struct parameters *params;
-		struct dataSet *data;
-		struct chromosome *chromo;
 
-		params = initialiseParameters(a,b,c,d);
-		addNodeFunction(params, "aaa,bbb,ccc");
+	/*
+		Title: CGP Functions
+	*/
 
-		data = initialiseDataSetFromFile("file");
+	/*
+		Function: runCGP
 
-		chromo = runCGP(params, data, 100);
+		Applies CGP to the given task.
 
-		freeParameters(params);
-		freeDataSet(data);
-		freeChromosome(chromo);
-		(end)
+		Returns the best chromosome found after applying CGP to a given task using the specified <parameters>. Depending upon the update frequency given in <parameters> (<setUpdateFrequency>) the progress made by CGP will be displayed in the terminal.
 
+		Note:
+			As runCGP returns an initialised chromosome this should later be free'd using <freeChromosome>.
 
-	See Also:
-		<repeatCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeChromosome>
-*/
-DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *data, int numGens);
+		Parameters:
+			params - pointer to <parameters> structure.
+			data - pointer to dataSet structure.
+			gens - the number of allowed generations before terminating the search.
 
+		Returns:
+			A pointer to an initialised chromosome.
 
-/*
-	Function: repeatCGP
+		Example:
 
-	Repeatedly applies CGP to the given task.
+			(begin code)
+			struct parameters *params;
+			struct dataSet *data;
+			struct chromosome *chromo;
 
-	Returns a <results> structure containing the results of applying CGP to the given task multiple times.
+			params = initialiseParameters(a,b,c,d);
+			addNodeFunction(params, "aaa,bbb,ccc");
 
-	Note:
-		As repeatCGP returns an initialised results structure this should later be free'd using <freeResults>.
+			data = initialiseDataSetFromFile("file");
 
-	Parameters:
-		params - pointer to <parameters> structure.
-		data - pointer to dataSet structure.
-		numGens - the number of allowed generations before terminating the search.
-		numRuns - the number of times CGP will be applied to the given task
+			chromo = runCGP(params, data, 100);
 
-	Returns:
-		A pointer to an initialised results structure.
+			freeParameters(params);
+			freeDataSet(data);
+			freeChromosome(chromo);
+			(end)
 
-	Example:
 
-		(begin code)
-		struct parameters *params;
-		struct dataSet *data;
-		struct results *rels;
+		See Also:
+			<repeatCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeChromosome>
+	*/
+	DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *data, int numGens);
 
-		params = initialiseParameters(a,b,c,d);
-		addNodeFunction(params, "aaa,bbb,ccc");
 
-		data = initialiseDataSetFromFile("file");
+	/*
+		Function: repeatCGP
 
-		rels = repeatCGP(params, data, 100, 50);
+		Repeatedly applies CGP to the given task.
 
-		freeParameters(params);
-		freeDataSet(data);
-		freeResults(rels);
-		(end)
+		Returns a <results> structure containing the results of applying CGP to the given task multiple times.
 
+		Note:
+			As repeatCGP returns an initialised results structure this should later be free'd using <freeResults>.
 
-	See Also:
-		<runCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeResults>
-*/
-DLL_EXPORT struct results* repeatCGP(struct parameters *params, struct dataSet *data, int numGens, int numRuns);
+		Parameters:
+			params - pointer to <parameters> structure.
+			data - pointer to dataSet structure.
+			numGens - the number of allowed generations before terminating the search.
+			numRuns - the number of times CGP will be applied to the given task
 
+		Returns:
+			A pointer to an initialised results structure.
 
-/*
-	Title: Other
-*/
+		Example:
 
-/*
-	Function: setRandomNumberSeed
-		Sets the seed used by the random number generator in CGP-Library.
+			(begin code)
+			struct parameters *params;
+			struct dataSet *data;
+			struct results *rels;
 
-		By default the current time is used as the random number seed. When a random number seed is specified the CGP-Library will produce the same results if used in the same way.
+			params = initialiseParameters(a,b,c,d);
+			addNodeFunction(params, "aaa,bbb,ccc");
 
-	Note:
-		<setRandomNumberSeed> *must* be called *after* <initialiseParameters> otherwise the time will be used as the random number seed.
+			data = initialiseDataSetFromFile("file");
 
-	Parameters:
-		seed - the random number seed to be used
+			rels = repeatCGP(params, data, 100, 50);
 
-	See Also:
-		<initialiseParameters>
-*/
-DLL_EXPORT void setRandomNumberSeed(unsigned int seed);
+			freeParameters(params);
+			freeDataSet(data);
+			freeResults(rels);
+			(end)
 
-/*
-	End of extern "C"
-*/
+
+		See Also:
+			<runCGP>, <initialiseParameters>, <initialiseDataSetFromFile>, <freeResults>
+	*/
+	DLL_EXPORT struct results* repeatCGP(struct parameters *params, struct dataSet *data, int numGens, int numRuns);
+
+
+	/*
+		Title: Other
+	*/
+
+	/*
+		Function: setRandomNumberSeed
+			Sets the seed used by the random number generator in CGP-Library.
+
+			By default the current time is used as the random number seed. When a random number seed is specified the CGP-Library will produce the same results if used in the same way.
+
+		Note:
+			<setRandomNumberSeed> *must* be called *after* <initialiseParameters> otherwise the time will be used as the random number seed.
+
+		Parameters:
+			seed - the random number seed to be used
+
+		See Also:
+			<initialiseParameters>
+	*/
+	DLL_EXPORT void setRandomNumberSeed(unsigned int seed);
+
+	/*
+		End of extern "C"
+	*/
 #ifdef __cplusplus
 }
 #endif
