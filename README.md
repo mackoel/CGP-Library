@@ -1,4 +1,10 @@
-CGP Library
+This a fork of CGP Library*
+
+The intention was to add functions with constants and make those constants to evolve together with chromosome.
+
+The project is to be used for building a model of the flowering time in chikpea.
+
+*CGP Library
 ======
 
 A cross platform Cartesian Genetic Programming Library written in C.
