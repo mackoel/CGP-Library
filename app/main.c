@@ -268,6 +268,10 @@ int main(int argc, char** argv) {
 
 		freeChromosome(chromo);
 
+		setUserData(params, (void*)errors_chromo);
+
+		setCustomFitnessFunction(params, supervisedLearningUserData, "supervisedLearningUserData");
+
 		for (i = 1; i < numLevels; i++) {
 			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
 				errors_chromo[j] = 1.0;
@@ -283,14 +287,13 @@ int main(int argc, char** argv) {
 				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
 					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
 				}
-				updateDataSetOutput(trainingData_right, errors_chromo, 1);
 				chromo_right = rerunCGP(params, trainingData_right, numGensInt, chromo_right);
 				getResult(trainingData_right, errors_chromo_right, chromo_right, levelCoeff);
 				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
 					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
 				}
-				updateDataSetOutput(trainingData_left, errors_chromo, 1);
 			}
+			updateDataSetOutput(trainingData_left, errors_chromo, 1);
 			updateDataSetOutput(trainingData_right, errors_chromo, 1);
 			
 			printChromosome(chromo_left, 0);

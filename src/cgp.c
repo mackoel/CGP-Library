@@ -80,6 +80,8 @@ struct parameters {
 	double* scaleForSigmoid;
 
 	int currentSNPcolumn;
+
+	void*userData;
 };
 
 struct chromosome {
@@ -753,6 +755,12 @@ DLL_EXPORT void setTargetFitness(struct parameters *params, double targetFitness
 	params->targetFitness = targetFitness;
 }
 
+/*
+	Sets the user data
+*/
+DLL_EXPORT void setUserData(struct parameters *params, void* ptr) {
+	params->userData = ptr;
+}
 
 /*
 	sets the mutation type in params
@@ -4556,9 +4564,6 @@ static double sumWeigtedInputs(const int numInputs, const double *inputs, const 
 }
 
 
-
-
-
 /*
 	The default fitness function used by CGP-Library.
 	Simply assigns an error of the sum of the absolute differences between the target and actual outputs for all outputs over all samples
@@ -4567,6 +4572,8 @@ static double supervisedLearning(struct parameters *params, struct chromosome *c
 
 	int i, j;
 	double error = 0;
+
+	double* user_data = (double*)params->userData;
 
 	/* error checking */
 	if (getNumChromosomeInputs(chromo) != getNumDataSetInputs(data)) {
@@ -4597,6 +4604,47 @@ static double supervisedLearning(struct parameters *params, struct chromosome *c
 		for (j = 0; j < getNumChromosomeOutputs(chromo); j++) {
 
 			error += fabs(getChromosomeOutput(chromo, j) - getDataSetSampleOutput(data, i, j));
+		}
+	}
+
+	return error;
+}
+
+
+/*
+	Assigns an error of the sum of the absolute differences between the target and actual outputs
+	multiplied by user_data for all outputs over all samples
+*/
+double supervisedLearningUserData(struct parameters *params, struct chromosome *chromo, struct dataSet *data) {
+
+	int i, j;
+	double error = 0;
+
+	double* user_data = (double*)params->userData;
+
+	/* error checking */
+	if (getNumChromosomeInputs(chromo) != getNumDataSetInputs(data)) {
+		printf("Error: the number of chromosome inputs must match the number of inputs specified in the dataSet.\n");
+		printf("Terminating CGP-Library.\n");
+		exit(0);
+	}
+
+	if (getNumChromosomeOutputs(chromo) != getNumDataSetOutputs(data)) {
+		printf("Error: the number of chromosome outputs must match the number of outputs specified in the dataSet.\n");
+		printf("Terminating CGP-Library.\n");
+		exit(0);
+	}
+
+	/* for each sample in data */
+	for (i = 0; i < getNumDataSetSamples(data); i++) {
+
+		/* calculate the chromosome outputs for the set of inputs  */
+		executeChromosome(chromo, getDataSetSampleInputs(data, i));
+
+		/* for each chromosome output */
+		for (j = 0; j < getNumChromosomeOutputs(chromo); j++) {
+
+			error += fabs(getChromosomeOutput(chromo, j) * user_data[j] - getDataSetSampleOutput(data, i, j));
 		}
 	}
 

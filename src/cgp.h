@@ -794,6 +794,22 @@ extern "C" {
 	(*reproductionScheme)(struct parameters *params, struct chromosome **parents, struct chromosome **children, int numParents, int numChildren), char const *reproductionSchemeName);
 
 
+	/*
+		Function: setUserData
+
+			Sets the user defined data.
+
+		Parameters:
+			params - pointer to <parameters> structure.
+			ptr - the ponter.
+	*/
+	DLL_EXPORT void setUserData(struct parameters *params, void* ptr);
+
+	/*
+		Assigns an error of the sum of the absolute differences between the target and actual outputs
+		multiplied by user_data for all outputs over all samples
+	*/
+	double supervisedLearningUserData(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
 
 	/*
 		Function: setTargetFitness
