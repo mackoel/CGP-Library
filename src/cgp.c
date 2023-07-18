@@ -1161,6 +1161,18 @@ void saveConstants(struct chromosome *chromo, char* filename) {
 	fclose(f);
 }
 
+
+void loadConstants(struct chromosome *chromo, char* filename) {
+	FILE *f = fopen(filename, "r");
+	for (int i = 0; i < chromo->numInputs; i++)
+	{
+		fscanf(f, "%lf ", &chromo->sigmaConstants[i]);
+		//printf("%i constants : %f\n", i, chromo->sigmaConstants[i]);
+	}
+	fclose(f);
+}
+
+
 void runOnTest(struct chromosome *chromo, char* test_filename, char* error_filename, struct parameters *params) {
 	double error = 0;
 	struct dataSet *data;
@@ -1185,6 +1197,7 @@ void runOnTest(struct chromosome *chromo, char* test_filename, char* error_filen
 	
 }
 
+
 void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data) {
 	for (int i = 0; i < getNumDataSetSamples(data); i++) {
 
@@ -1201,6 +1214,23 @@ void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct 
 		}
 	}
 	
+}
+
+
+void getResult(struct dataSet *data, double* errors, struct chromosome *chromo, int currentSNPcolumn) {
+
+	for (int i = 0; i < data->numSamples; i++) {
+
+		if (currentSNPcolumn >= 0)
+			executeChromosome(chromo, getDataSetSampleInputs(data, i), getDataSetSampleInput(data, i, currentSNPcolumn));
+		else
+			executeChromosome(chromo, getDataSetSampleInputs(data, i), 1);
+
+		for (int j = 0; j < chromo->numOutputs; j++) {
+			errors[i] += getChromosomeOutput(chromo, j); //- getDataSetSampleOutput(data, i, j));
+		}
+	}
+
 }
 
 
@@ -2713,6 +2743,14 @@ DLL_EXPORT double *getDataSetSampleOutputs(struct dataSet *data, int sample) {
 */
 DLL_EXPORT double getDataSetSampleOutput(struct dataSet *data, int sample, int output) {
 	return data->outputData[sample][output];
+}
+
+
+/*
+	returns number of samples
+*/
+int getDataSetNumSamples(struct dataSet *data) {
+	return data->numSamples;
 }
 
 

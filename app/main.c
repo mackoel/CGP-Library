@@ -1,7 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "cgp.h"
 
+
+double maximum(double num[], int size)
+{
+	int i;
+	double max;
+	max = num[0];
+
+	for (i = 1; i < size; i++) {
+		if (num[i] > max)
+			max = num[i];
+	}
+	return max;
+}
 
 
 int cmp_ptr(const void *a, const void *b)
@@ -24,26 +38,51 @@ size_t * order_int(const int *a, size_t n)
 }
 
 
-double my_func(const int numInputs, const double *inputs, const double *connectionWeights, double simpleConstant) {
+double hyperbola(const int numInputs, const double *inputs, const double *connectionWeights, double simpleConstant) {
 	return 1 / (inputs[0] - simpleConstant);
 }
 
-double my_func1(const int numInputs, const double *inputs, const double *connectionWeights, double simpleConstant) {
+
+double linear(const int numInputs, const double *inputs, const double *connectionWeights, double simpleConstant) {
 	return (inputs[0] - simpleConstant);
 }
 
 
+double SS_tot(double a[], int n)
+{
+	double sum = 0;
+	for (int i = 0; i < n; i++) sum += a[i];
+
+	double mean = (double)sum /(double)n;
+
+	double sqDiff = 0;
+	for (int i = 0; i < n; i++) sqDiff += (a[i] - mean) * (a[i] - mean);
+	return sqDiff;
+}
 
 
-
+double SS_res(double a[], int n)
+{
+	double sum = 0;
+	for (int i = 0; i < n; i++) sum += a[i]*a[i];
+	return sum;
+}
 
 int main(int argc, char** argv) {
 
+	int operation_mode = 0; /* 0 - optimization
+							   1 - print errors */
+
+	if (argc > 1) {
+		sscanf(argv[1], "%d", &operation_mode);
+	} else {
+		fprintf(stderr, "No parameters given, exiting\n");
+		return 0;
+	}
 
 	struct parameters *params = NULL;
 	struct dataSet *trainingData = NULL;
 	struct chromosome *chromo = NULL;
-
 
 	int numInputs = 4;
 	int numNodes = 200;
@@ -71,18 +110,15 @@ int main(int argc, char** argv) {
 
 	for (int i = 0; i < numInputs; ++i) {
 		fscanf(pFile, "%lf;\n", &defaultSimpleConstants[i]);
-		printf("%lf ", defaultSimpleConstants[i]);
+		// printf("%lf ", defaultSimpleConstants[i]);
 	}
-	//defaultSimpleConstants[0] = 50000;
-	//defaultSimpleConstants[1] = 0;
-	//defaultSimpleConstants[2] = 0;
-	//defaultSimpleConstants[3] = 0;
+
 	fscanf(pFile, "\n", NULL);
 	printf("\n");
 	double* shiftForSigmoid = malloc(numInputs * sizeof(double));
 	for (int i = 0; i < numInputs; ++i) {
 		fscanf(pFile, "%lf;\n", &shiftForSigmoid[i]);
-		printf("%lf ", shiftForSigmoid[i]);
+		// printf("%lf ", shiftForSigmoid[i]);
 	}
 
 	fscanf(pFile, "\n", NULL);
@@ -90,40 +126,32 @@ int main(int argc, char** argv) {
 	double* scaleForSigmoid = malloc(numInputs * sizeof(double));
 	for (int i = 0; i < numInputs; ++i) {
 		fscanf(pFile, "%lf;\n", &scaleForSigmoid[i]);
-		printf("%lf ", scaleForSigmoid[i]);
+		// printf("%lf ", scaleForSigmoid[i]);
 	}
 
+	if (operation_mode == 0) {
 
-	// Note: you may need to check this path such that it is relative to your executable 
-	//trainingData = initialiseDataSetFromFile("hardExample.data");
+		char* train_filename = NULL;
+		char* test_filename = NULL;
 
-	char* train_filename = NULL;
-	char* test_filename = NULL;
+		char* output_chromo = NULL;
+		char* output_constants = NULL;
+		char* output_tex = NULL;
 
-	char* output_chromo = NULL;
-	char* output_constants = NULL;
-	char* output_tex = NULL;
+		char* strNumOfSnp = NULL;
+		if (argc == 3) {
+			train_filename = argv[1];
+		} else {
+			fprintf(stderr, "\n Incorrect input \n");
+		}
 
-	char* strNumOfSnp = NULL;
-	if (argc == 2) {
-		train_filename = argv[1];
-	}
-	else {
-		printf("\n Incorrect input \n");
-	}
-
-	trainingData = initialiseDataSetFromFile(train_filename);
-
-
-	//int numOfSNP = atoi(strNumOfSnp);
-
-
+		trainingData = initialiseDataSetFromFile(train_filename);
 
 		params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid, -1);
 
 		addNodeFunction(params, "add,sub,mul,div");
-		addCustomNodeFunction(params, my_func, "hyperbola", 1);
-		addCustomNodeFunction(params, my_func1, "linear", 1);
+		addCustomNodeFunction(params, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(params, linear, "linear", 1);
 
 		setTargetFitness(params, targetFitness);
 
@@ -149,12 +177,71 @@ int main(int argc, char** argv) {
 
 		freeChromosome(chromo);
 		freeParameters(params);
+		freeDataSet(trainingData);
+	}
 
+	if (operation_mode == 1) {
+		int begin = -1;
+		int end = 18;
 
+		char* test_filename = NULL;
+		char* train_filename = NULL;
+		if (argc == 4) {
+			test_filename = argv[2];
+			train_filename = argv[3];
+			begin = -1;
+			end = 18;
+		} else if (argc == 6) {
+			test_filename = argv[2];
+			train_filename = argv[3];
+			begin = strtol(argv[4], NULL, 10);
+			end = strtol(argv[5], NULL, 10);
+		} else {
+			fprintf(stderr, "test.data train.data\n");
+			exit;
+		}
 
+		double error = 0;
+		struct dataSet *data;
+		data = initialiseDataSetFromFile(test_filename);
+		double* errors = (double*)calloc(getDataSetNumSamples(data), sizeof(double));
 
-	freeDataSet(trainingData);
+		for (int i = begin; i < end; i++) {
+			char const_filename[100];
+			char chromo_filename[100];
 
+			snprintf(const_filename, 100, "%s_const%02d.txt", train_filename, i+1); 
+			snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename, i+1); 
+
+			chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			loadConstants(chromo, const_filename);
+
+			getResult(data, errors, chromo, i);
+
+			freeChromosome(chromo);
+		}
+
+		double* real = (double*)calloc(getDataSetNumSamples(data), sizeof(double));
+		for (int i = 0; i < getDataSetNumSamples(data); i++)
+			real[i] = getDataSetSampleOutput(data, i, 0);
+		double SS_tot_ = SS_tot(real, getDataSetNumSamples(data));
+
+		for (int i = 0; i < getDataSetNumSamples(data); i++)
+			errors[i] = fabs(errors[i] - getDataSetSampleOutput(data, i, 0));
+
+		double SS_res_ = SS_res(errors, getDataSetNumSamples(data));
+		double sum_errors = 0;
+		for (int i = 0; i < getDataSetNumSamples(data); i++)
+			sum_errors += errors[i];
+
+		printf("%lf\n", sum_errors);
+
+		printf("%lf\n", 1 - SS_res_/SS_tot_);
+		
+		printf("%lf\n", maximum(errors, getDataSetNumSamples(data)));
+
+		freeDataSet(data);
+	}
 
 	return 0;
 }

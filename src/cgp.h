@@ -229,6 +229,10 @@ extern "C" {
 	void runOnTest(struct chromosome *chromo, char* test_filename,char* error_filename, struct parameters *params);
 	void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
 
+	void getResult(struct dataSet *data, double* errors, struct chromosome *chromo, int currentSNPcolumn);
+	int getDataSetNumSamples(struct dataSet *data);
+	void loadConstants(struct chromosome *chromo, char* filename);
+
 	int* countOnesByColumn(struct dataSet *data, int begin, int end);
 
 	DLL_EXPORT struct parameters *initialiseParameters(const int numInputs, const int numNodes, const int numOutputs, const int arity, double maxMutationConst, double* defaultSimpleConstants, double* shiftForSigmoid, double* scaleForSigmoid, int currentSNPcolumn);
