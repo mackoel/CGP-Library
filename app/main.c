@@ -257,8 +257,6 @@ int main(int argc, char** argv) {
 		saveChromosome(chromo, chromo_filename);
 		saveChromosomeLatex(chromo, 0, latex_filename);
 
-		freeChromosome(chromo);
-
 		double* errors_chromo = (double*)calloc(getDataSetNumSamples(trainingData_right), sizeof(double));
 		double* errors_chromo_left = (double*)calloc(getDataSetNumSamples(trainingData_left), sizeof(double));
 		double* errors_chromo_right = (double*)calloc(getDataSetNumSamples(trainingData_right), sizeof(double));
@@ -267,6 +265,8 @@ int main(int argc, char** argv) {
 
 		updateDataSetOutput(trainingData_left, errors_chromo, 1);
 		updateDataSetOutput(trainingData_right, errors_chromo, 1);
+
+		freeChromosome(chromo);
 
 		for (i = 1; i < numLevels; i++) {
 			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
@@ -316,10 +316,11 @@ int main(int argc, char** argv) {
 		}
 
 		freeParameters(params);
-		freeDataSet(trainingData);
+		freeDataSet(trainingData_left);
+		freeDataSet(trainingData_right);
 	}
 
-	if (operation_mode == OPERATION_TEST1) {
+	if (operation_mode == OPERATION_TEST) {
 
 		char* train_filename_left = NULL;
 		char* train_filename_right = NULL;
@@ -357,10 +358,6 @@ int main(int argc, char** argv) {
 
 		printParameters(params);
 
-		chromo = runCGP(params, trainingData, numGens);
-		
-		printChromosome(chromo, 0);
-
 		char const_filename[100];
 		char chromo_filename[100];
 		char latex_filename[100];
@@ -368,11 +365,11 @@ int main(int argc, char** argv) {
 		snprintf(const_filename, 100, "%s_const%02d.txt",train_filename_right, i);
 		snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename_right, i);
 		snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename_right, i);
-		saveConstants(chromo, const_filename);
-		saveChromosome(chromo, chromo_filename);
-		saveChromosomeLatex(chromo, 0, latex_filename);
 
-		freeChromosome(chromo);
+		chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+		loadConstants(chromo, const_filename);
+		
+		printChromosome(chromo, 0);
 
 		double* errors_chromo = (double*)calloc(getDataSetNumSamples(trainingData_right), sizeof(double));
 		double* errors_chromo_left = (double*)calloc(getDataSetNumSamples(trainingData_left), sizeof(double));
@@ -383,55 +380,49 @@ int main(int argc, char** argv) {
 		updateDataSetOutput(trainingData_left, errors_chromo, 1);
 		updateDataSetOutput(trainingData_right, errors_chromo, 1);
 
+		freeChromosome(chromo);
+
 		for (i = 1; i < numLevels; i++) {
-			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-				errors_chromo[j] = 1.0;
-				errors_chromo_left[j] = 1.0;
-				errors_chromo_right[j] = 1.0;
-			}
 			chromo_left = initialiseChromosome(params);
 			chromo_right = initialiseChromosome(params);
-
-			for (int k = 0; k < numGens / numGensInt; k++) {
-				chromo_left = rerunCGP(params, trainingData_left, numGensInt, chromo_left);
-				getResult(trainingData_left, errors_chromo_left, chromo_left, levelCoeff);
-				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
-				}
-				updateDataSetOutput(trainingData_right, errors_chromo, 1);
-				chromo_right = rerunCGP(params, trainingData_right, numGensInt, chromo_right);
-				getResult(trainingData_right, errors_chromo_right, chromo_right, levelCoeff);
-				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
-				}
-				updateDataSetOutput(trainingData_left, errors_chromo, 1);
-			}
-			updateDataSetOutput(trainingData_right, errors_chromo, 1);
-			
-			printChromosome(chromo_left, 0);
 
 			snprintf(const_filename, 100, "%s_const_left%02d.txt",train_filename_left, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_left%02d.chromo", train_filename_left, i+1);
 			snprintf(latex_filename, 100, "%s_latex_left%02d.tex", train_filename_left, i+1);
-			saveConstants(chromo_left, const_filename);
-			saveChromosome(chromo_left, chromo_filename);
-			saveChromosomeLatex(chromo_left, 0, latex_filename);
 
-			printChromosome(chromo_right, 0);
+			chromo_left = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			loadConstants(chromo_left, const_filename);
+
+			printChromosome(chromo_left, 0);
+
+			getResult(trainingData_left, errors_chromo_left, chromo_left, levelCoeff);
 
 			snprintf(const_filename, 100, "%s_const_right%02d.txt",train_filename_right, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_right%02d.chromo", train_filename_right, i+1);
 			snprintf(latex_filename, 100, "%s_latex_right%02d.tex", train_filename_right, i+1);
-			saveConstants(chromo_right, const_filename);
-			saveChromosome(chromo_right, chromo_filename);
-			saveChromosomeLatex(chromo_right, 0, latex_filename);
+
+			chromo_right = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			loadConstants(chromo_right, const_filename);
+
+			printChromosome(chromo_right, 0);
+
+			getResult(trainingData_right, errors_chromo_right, chromo_right, levelCoeff);
+
+			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
+				errors_chromo[j] += errors_chromo_left[j] * errors_chromo_right[j];
+			}
 
 			freeChromosome(chromo_left);
 			freeChromosome(chromo_right);
 		}
 
+		for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
+			fprintf(stdout,"%4d, %13.6lf, %13.6lf\n", j, errors_chromo[j], getDataSetSampleOutput(trainingData_right, j, 0));
+		}
+
 		freeParameters(params);
-		freeDataSet(trainingData);
+		freeDataSet(trainingData_left);
+		freeDataSet(trainingData_right);
 	}
 
 	if (operation_mode == OPERATION_PRINT) {
