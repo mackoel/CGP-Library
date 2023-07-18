@@ -92,9 +92,15 @@ int main(int argc, char** argv) {
 	double targetFitness = 0.01;
 	int updateFrequency = 500;
 	double maxMutationConst = 0.1;
+	int numLevels = 10;
+	double levelCoeff = 0.9;
 
 	FILE * pFile;
-	pFile = fopen("parameters.txt", "r");
+	pFile = fopen(argv[2], "r");
+	if (pFile == NULL) {
+		fprintf(stderr, "Can't open parameters file, exiting\n");
+		return 0;
+	}
 
 	fscanf(pFile, "numInputs = %i;\n", &numInputs);
 	fscanf(pFile, "numNodes = %i;\n", &numNodes);
@@ -104,7 +110,8 @@ int main(int argc, char** argv) {
 	fscanf(pFile, "targetFitness = %lf;\n", &targetFitness);
 	fscanf(pFile, "updateFrequency = %i;\n", &updateFrequency);
 	fscanf(pFile, "maxMutationConst = %lf;\n", &maxMutationConst);
-
+	fscanf(pFile, "numLevels = %i;\n", &numLevels);
+	fscanf(pFile, "levelCoeff = %lf;\n", &levelCoeff);
 
 	double* defaultSimpleConstants = malloc(numInputs * sizeof(double));
 
@@ -139,8 +146,8 @@ int main(int argc, char** argv) {
 		char* output_tex = NULL;
 
 		char* strNumOfSnp = NULL;
-		if (argc == 3) {
-			train_filename = argv[1];
+		if (argc > 3) {
+			train_filename = argv[3];
 		} else {
 			fprintf(stderr, "\n Incorrect input \n");
 		}
@@ -159,23 +166,26 @@ int main(int argc, char** argv) {
 
 		printParameters(params);
 
-		chromo = runCGP(params, trainingData, numGens);
-	
-		printChromosome(chromo, 0);
+		for (int i = 0; i < numLevels; i++) {
+			chromo = runCGP(params, trainingData, numGens);
+		
+			printChromosome(chromo, 0);
 
-		char const_filename[100];
-		char chromo_filename[100];
-		char latex_filename[100];
-		snprintf(const_filename, 100, "%s_const%02d.txt",train_filename, 0); // i+1
-		snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename, 0); //i+1
-		snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename, 0); //i+1
-		saveConstants(chromo, const_filename);
-		saveChromosome(chromo, chromo_filename);
-		saveChromosomeLatex(chromo, 0, latex_filename);
+			char const_filename[100];
+			char chromo_filename[100];
+			char latex_filename[100];
+			snprintf(const_filename, 100, "%s_const%02d.txt",train_filename, i+1); // i+1
+			snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename, i+1); //i+1
+			snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename, i+1); //i+1
+			saveConstants(chromo, const_filename);
+			saveChromosome(chromo, chromo_filename);
+			saveChromosomeLatex(chromo, 0, latex_filename);
 
-		UpdateDataSet(params, chromo, trainingData);
+			UpdateDataSet(params, chromo, trainingData, levelCoeff);
 
-		freeChromosome(chromo);
+			freeChromosome(chromo);
+		}
+
 		freeParameters(params);
 		freeDataSet(trainingData);
 	}
@@ -186,22 +196,22 @@ int main(int argc, char** argv) {
 
 		char* test_filename = NULL;
 		char* train_filename = NULL;
-		if (argc == 4) {
-			test_filename = argv[2];
-			train_filename = argv[3];
+		if (argc == 5) {
+			test_filename = argv[3];
+			train_filename = argv[4];
 			begin = -1;
 			end = 18;
-		} else if (argc == 6) {
-			test_filename = argv[2];
-			train_filename = argv[3];
-			begin = strtol(argv[4], NULL, 10);
-			end = strtol(argv[5], NULL, 10);
+		} else if (argc == 7) {
+			test_filename = argv[3];
+			train_filename = argv[4];
+			begin = strtol(argv[5], NULL, 10);
+			end = strtol(argv[6], NULL, 10);
 		} else {
-			fprintf(stderr, "test.data train.data\n");
-			exit;
+			fprintf(stderr, "train.data test.data\n");
+			return 0;
 		}
 
-		double error = 0;
+		/*double error = 0;*/
 		struct dataSet *data;
 		data = initialiseDataSetFromFile(test_filename);
 		double* errors = (double*)calloc(getDataSetNumSamples(data), sizeof(double));
@@ -216,7 +226,7 @@ int main(int argc, char** argv) {
 			chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
 			loadConstants(chromo, const_filename);
 
-			getResult(data, errors, chromo, i);
+			getResult(data, errors, chromo, levelCoeff);
 
 			freeChromosome(chromo);
 		}

@@ -227,9 +227,9 @@ extern "C" {
 
 	void saveConstants(struct chromosome *chromo, char* filename);
 	void runOnTest(struct chromosome *chromo, char* test_filename,char* error_filename, struct parameters *params);
-	void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data);
+	void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data, double levelCoeff);
 
-	void getResult(struct dataSet *data, double* errors, struct chromosome *chromo, int currentSNPcolumn);
+	void getResult(struct dataSet *data, double* errors, struct chromosome *chromo/*, int currentSNPcolumn*/, double levelCoeff);
 	int getDataSetNumSamples(struct dataSet *data);
 	void loadConstants(struct chromosome *chromo, char* filename);
 
@@ -1048,7 +1048,7 @@ extern "C" {
 				<getChromosomeOutput>
 
 	*/
-	DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs, double currentSNP);
+	DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs); //, double currentSNP);
 
 
 

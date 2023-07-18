@@ -1173,6 +1173,7 @@ void loadConstants(struct chromosome *chromo, char* filename) {
 }
 
 
+/*
 void runOnTest(struct chromosome *chromo, char* test_filename, char* error_filename, struct parameters *params) {
 	double error = 0;
 	struct dataSet *data;
@@ -1196,38 +1197,43 @@ void runOnTest(struct chromosome *chromo, char* test_filename, char* error_filen
 	fprintf(error_file, "%lf\n", error);
 	
 }
+*/
 
 
-void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data) {
+void UpdateDataSet(struct parameters *params, struct chromosome *chromo, struct dataSet *data, double levelCoeff) {
 	for (int i = 0; i < getNumDataSetSamples(data); i++) {
 
 		/* calculate the chromosome outputs for the set of inputs  */
+		executeChromosome(chromo, getDataSetSampleInputs(data, i));
+/*
 		if (params->currentSNPcolumn >= 0)
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), getDataSetSampleInput(data, i, params->currentSNPcolumn));
 		else
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), 1);
-
+*/
 		/* for each chromosome output */
 		for (int j = 0; j < getNumChromosomeOutputs(chromo); j++) {
 
-			data->outputData[i][j] = getDataSetSampleOutput(data, i, j) - getChromosomeOutput(chromo, j);
+			data->outputData[i][j] = getDataSetSampleOutput(data, i, j) - levelCoeff * getChromosomeOutput(chromo, j);
 		}
 	}
 	
 }
 
 
-void getResult(struct dataSet *data, double* errors, struct chromosome *chromo, int currentSNPcolumn) {
+void getResult(struct dataSet *data, double* errors, struct chromosome *chromo/*, int currentSNPcolumn*/, double levelCoeff) {
 
 	for (int i = 0; i < data->numSamples; i++) {
-
+/*
 		if (currentSNPcolumn >= 0)
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), getDataSetSampleInput(data, i, currentSNPcolumn));
 		else
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), 1);
+*/		
+		executeChromosome(chromo, getDataSetSampleInputs(data, i));
 
 		for (int j = 0; j < chromo->numOutputs; j++) {
-			errors[i] += getChromosomeOutput(chromo, j); //- getDataSetSampleOutput(data, i, j));
+			errors[i] += levelCoeff * getChromosomeOutput(chromo, j);
 		}
 	}
 
@@ -1299,7 +1305,7 @@ DLL_EXPORT void printChromosome(struct chromosome *chromo, int weights) {
 /*
 	Executes the given chromosome
 */
-DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs, double currentSNP) {
+DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *inputs) { //, double currentSNP) {
 
 
 	int i, j;
@@ -1397,8 +1403,10 @@ DLL_EXPORT void executeChromosome(struct chromosome *chromo, const double *input
 	}
 
 	/* Multiply by the current snp column */
+	/*
 	for (i = 0; i < numOutputs; i++)
 		chromo->outputValues[i] *= currentSNP;
+	*/
 
 }
 
@@ -4381,15 +4389,17 @@ static double supervisedLearning(struct parameters *params, struct chromosome *c
 	for (i = 0; i < getNumDataSetSamples(data); i++) {
 
 		/* calculate the chromosome outputs for the set of inputs  */
+		executeChromosome(chromo, getDataSetSampleInputs(data, i));
+		/*
 		if(params->currentSNPcolumn >= 0)
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), getDataSetSampleInput(data, i, params->currentSNPcolumn));
 		else
 			executeChromosome(chromo, getDataSetSampleInputs(data, i), 1);
+		*/
 
 		/* for each chromosome output */
 		for (j = 0; j < getNumChromosomeOutputs(chromo); j++) {
 
-			// убрать умножение
 			error += fabs(getChromosomeOutput(chromo, j) - getDataSetSampleOutput(data, i, j));
 		}
 	}
