@@ -382,7 +382,7 @@ DLL_EXPORT void addNodeFunction(struct parameters *params, char const *functionN
 	Adds given node function to given function set with given name.
 	Disallows exceeding the function set size.
 */
-DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double(*function)(const int numInputs, const double *inputs, const double *weights), char const *functionName, int maxNumInputs) {
+DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double(*function)(const int numInputs, const double *inputs, const double *weights, double simpleConstant), char const *functionName, int maxNumInputs) {
 
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
 		printf("Warning: functions set has reached maximum capacity (%d). Function '%s' not added.\n", FUNCTIONSETSIZE, functionName);
@@ -3879,7 +3879,7 @@ static double _add(const int numInputs, const double *inputs, const double *conn
 /*
 	Node function sub. Returns the first input minus all remaining inputs.
 */
-static double _sub(const int numInputs, const double *inputs, const double *connectionWeights) {
+static double _sub(const int numInputs, const double *inputs, const double *connectionWeights, double simpleConstant) {
 
 	int i;
 	double sum = inputs[0];
@@ -4216,7 +4216,7 @@ static double _sigmoid(const int numInputs, const double *inputs, const double *
 	double weightedInputSum;
 	double out;
 
-	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights,0,0);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights, simpleConstant);
 
 	out = 1 / (1 + exp(-weightedInputSum));
 
@@ -4235,7 +4235,7 @@ static double _gaussian(const int numInputs, const double *inputs, const double 
 	int centre = 0;
 	int width = 1;
 
-	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights,0,0);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights, simpleConstant);
 
 	out = exp(-(pow(weightedInputSum - centre, 2)) / (2 * pow(width, 2)));
 
@@ -4252,7 +4252,7 @@ static double _step(const int numInputs, const double *inputs, const double *con
 	double weightedInputSum;
 	double out;
 
-	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights,0,0);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights, simpleConstant);
 	if (weightedInputSum < 0) {
 		out = 0;
 	}
@@ -4273,7 +4273,7 @@ static double _softsign(const int numInputs, const double *inputs, const double 
 	double weightedInputSum;
 	double out;
 
-	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights,0,0);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights, simpleConstant);
 
 	out = weightedInputSum / (1 + fabs(weightedInputSum));
 
@@ -4290,7 +4290,7 @@ static double _hyperbolicTangent(const int numInputs, const double *inputs, cons
 	double weightedInputSum;
 	double out;
 
-	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights,0,0);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights, simpleConstant);
 
 	out = tanh(weightedInputSum);
 

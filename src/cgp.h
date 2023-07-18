@@ -404,7 +404,7 @@ extern "C" {
 		See Also:
 			<clearFunctionSet>, <addNodeFunction>
 	*/
-	DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double(*function)(const int numInputs, const double *inputs, const double *weights), char const *functionName, int maxNumInputs);
+	DLL_EXPORT void addCustomNodeFunction(struct parameters *params, double(*function)(const int numInputs, const double *inputs, const double *weights, double simpleConstant), char const *functionName, int maxNumInputs);
 
 
 	/*
