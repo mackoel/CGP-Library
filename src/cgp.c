@@ -1041,6 +1041,102 @@ DLL_EXPORT struct chromosome* initialiseChromosomeFromFile(char const *file, dou
 
 
 /*
+	Reads in saved chromosomes with user functions
+*/
+DLL_EXPORT struct chromosome* initialiseChromosomeFromFileWithUserFunctions(struct parameters *params, char const *file) {
+
+
+	int i, j;
+
+	FILE *fp;
+	struct chromosome *chromo;
+
+	char *line, *record;
+	char funcName[FUNCTIONNAMELENGTH];
+	char buffer[8192];
+
+	int numInputs, numNodes, numOutputs, arity;
+
+	/* open the chromosome file */
+	fp = fopen(file, "r");
+
+	/* ensure that the file was opened correctly */
+	if (fp == NULL) {
+		printf("Warning: cannot open chromosome: '%s'. Chromosome was not open.\n", file);
+		return NULL;
+	}
+
+	/* get num inputs */
+	line = fgets(buffer, sizeof(buffer), fp);
+	if (line == NULL) {/*error*/ }
+	record = strtok(line, ",");
+	record = strtok(NULL, ",");
+	numInputs = atoi(record);
+
+	/* get num nodes */
+	line = fgets(buffer, sizeof(buffer), fp);
+	if (line == NULL) {/*error*/ }
+	record = strtok(line, ",");
+	record = strtok(NULL, ",");
+	numNodes = atoi(record);
+
+	/* get num outputs */
+	line = fgets(buffer, sizeof(buffer), fp);
+	if (line == NULL) {/*error*/ }
+	record = strtok(line, ",");
+	record = strtok(NULL, ",");
+	numOutputs = atoi(record);
+
+	/* get arity */
+	line = fgets(buffer, sizeof(buffer), fp);
+	if (line == NULL) {/*error*/ }
+	record = strtok(line, ",");
+	record = strtok(NULL, ",");
+	arity = atoi(record);
+
+	/* get and set node functions */
+	line = fgets(buffer, sizeof(buffer), fp);
+	if (line == NULL) {/*error*/ }
+	record = strtok(line, ",\n");
+	record = strtok(NULL, ",\n");
+
+	/* initialise a chromosome based on the parameters associated with given chromosome */
+	chromo = initialiseChromosome(params);
+
+	/* set the node parameters */
+	for (i = 0; i < numNodes; i++) {
+
+		/* get the function gene */
+		line = fgets(buffer, sizeof(buffer), fp);
+		record = strtok(line, ",\n");
+		chromo->nodes[i]->function = atoi(record);
+
+		for (j = 0; j < arity; j++) {
+			line = fgets(buffer, sizeof(buffer), fp);
+			sscanf(line, "%d,%lf", &chromo->nodes[i]->inputs[j], &chromo->nodes[i]->weights[j]);
+		}
+	}
+
+	/* set the outputs */
+	line = fgets(buffer, sizeof(buffer), fp);
+	record = strtok(line, ",\n");
+	chromo->outputNodes[0] = atoi(record);
+
+	for (i = 1; i < numOutputs; i++) {
+		record = strtok(NULL, ",\n");
+		chromo->outputNodes[i] = atoi(record);
+	}
+
+	fclose(fp);
+
+	/* set the active nodes in the copied chromosome */
+	setChromosomeActiveNodes(chromo);
+
+	return chromo;
+}
+
+
+/*
 	Returns a pointer to an initialised chromosome with values obeying the given parameters.
 */
 DLL_EXPORT struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo) {
@@ -1274,7 +1370,7 @@ DLL_EXPORT void printChromosome(struct chromosome *chromo, int weights) {
 	/* set the active nodes in the given chromosome */
 	setChromosomeActiveNodes(chromo);
 
-	printf("Const: %f %f %f\n", chromo->sigmaConstants[0], chromo->sigmaConstants[1], chromo->sigmaConstants[2]);
+	// printf("Const: %f %f %f\n", chromo->sigmaConstants[0], chromo->sigmaConstants[1], chromo->sigmaConstants[2]);
 	/* for all the chromo inputs*/
 	for (i = 0; i < chromo->numInputs; i++) {
 		printf("(%d):\tinput\n", i);
@@ -3584,10 +3680,12 @@ DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *
 	}
 
 	/* show the user whats going on */
+	/*
 	if (params->updateFrequency != 0) {
 		printf("\n-- Starting CGP --\n\n");
 		printf("Gen\tfitness\n");
 	}
+	*/
 
 	/* for each generation */
 	for (gen = 0; gen < numGens; gen++) {
@@ -3613,9 +3711,11 @@ DLL_EXPORT struct chromosome* runCGP(struct parameters *params, struct dataSet *
 
 		/* display progress to the user at the update frequency specified */
 		if (params->updateFrequency != 0 && (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			printf("%d\t%f\t  0: %f \t", gen, bestChromo->fitness, bestChromo->sigmaConstants[0]);
-			for (int l = 1; l < bestChromo->numInputs; l++)
+			printf("runCGP: %d\tfitness: %f\t", gen, bestChromo->fitness);
+			/*
+			for (int l = 0; l < bestChromo->numInputs; l++)
 				printf("%i: %f \t", l, bestChromo->sigmaConstants[l]);
+			*/
 			printf("\n");
 		}
 
@@ -3767,10 +3867,12 @@ DLL_EXPORT struct chromosome* rerunCGP(struct parameters *params, struct dataSet
 	}
 
 	/* show the user whats going on */
+	/*
 	if (params->updateFrequency != 0) {
 		printf("\n-- Starting CGP --\n\n");
 		printf("Gen\tfitness\n");
 	}
+	*/
 
 	/* for each generation */
 	for (gen = 0; gen < numGens; gen++) {
@@ -3796,9 +3898,11 @@ DLL_EXPORT struct chromosome* rerunCGP(struct parameters *params, struct dataSet
 
 		/* display progress to the user at the update frequency specified */
 		if (params->updateFrequency != 0 && (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			printf("%d\t%f\t  0: %f \t", gen, bestChromo->fitness, bestChromo->sigmaConstants[0]);
-			for (int l = 1; l < bestChromo->numInputs; l++)
+			printf("rerunCGP: %d\tfitness: %f\t", gen, bestChromo->fitness);
+			/*
+			for (int l = 0; l < bestChromo->numInputs; l++)
 				printf("%i: %f \t", l, bestChromo->sigmaConstants[l]);
+			*/
 			printf("\n");
 		}
 

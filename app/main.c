@@ -91,11 +91,13 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	struct parameters *params = NULL;
+	struct parameters *paramsLeft = NULL;
+	struct parameters *paramsRight = NULL;
 	struct dataSet *trainingData = NULL;
 	struct chromosome *chromo = NULL;
 
-	int numInputs = 4;
+	int numInputsLeft = 4;
+	int numInputsRight = 4;
 	int numNodes = 200;
 	int numOutputs = 1;
 	int nodeArity = 2;
@@ -114,7 +116,8 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	fscanf(pFile, "numInputs = %i;\n", &numInputs);
+	fscanf(pFile, "numInputsLeft = %i;\n", &numInputsLeft);
+	fscanf(pFile, "numInputsRight = %i;\n", &numInputsRight);
 	fscanf(pFile, "numNodes = %i;\n", &numNodes);
 	fscanf(pFile, "numOutputs = %i;\n", &numOutputs);
 	fscanf(pFile, "nodeArity = %i;\n", &nodeArity);
@@ -126,28 +129,53 @@ int main(int argc, char** argv) {
 	fscanf(pFile, "levelCoeff = %lf;\n", &levelCoeff);
 	fscanf(pFile, "numGensInt = %i;\n", &numGensInt);
 
-	double* defaultSimpleConstants = malloc(numInputs * sizeof(double));
+	double* defaultSimpleConstantsLeft = malloc(numInputsLeft * sizeof(double));
 
-	for (int i = 0; i < numInputs; ++i) {
-		fscanf(pFile, "%lf;\n", &defaultSimpleConstants[i]);
+	fscanf(pFile, "\n", NULL);
+	for (int i = 0; i < numInputsLeft; ++i) {
+		fscanf(pFile, "%lf;\n", &defaultSimpleConstantsLeft[i]);
 		// printf("%lf ", defaultSimpleConstants[i]);
 	}
 
 	fscanf(pFile, "\n", NULL);
-	printf("\n");
-	double* shiftForSigmoid = malloc(numInputs * sizeof(double));
-	for (int i = 0; i < numInputs; ++i) {
-		fscanf(pFile, "%lf;\n", &shiftForSigmoid[i]);
+	// printf("\n");
+	double* shiftForSigmoidLeft = malloc(numInputsLeft * sizeof(double));
+	for (int i = 0; i < numInputsLeft; ++i) {
+		fscanf(pFile, "%lf;\n", &shiftForSigmoidLeft[i]);
 		// printf("%lf ", shiftForSigmoid[i]);
 	}
 
 	fscanf(pFile, "\n", NULL);
-	printf("\n");
-	double* scaleForSigmoid = malloc(numInputs * sizeof(double));
-	for (int i = 0; i < numInputs; ++i) {
-		fscanf(pFile, "%lf;\n", &scaleForSigmoid[i]);
+	// printf("\n");
+	double* scaleForSigmoidLeft = malloc(numInputsLeft * sizeof(double));
+	for (int i = 0; i < numInputsLeft; ++i) {
+		fscanf(pFile, "%lf;\n", &scaleForSigmoidLeft[i]);
 		// printf("%lf ", scaleForSigmoid[i]);
 	}
+
+	double* defaultSimpleConstantsRight = malloc(numInputsRight * sizeof(double));
+
+	for (int i = 0; i < numInputsRight; ++i) {
+		fscanf(pFile, "%lf;\n", &defaultSimpleConstantsRight[i]);
+		// printf("%lf ", defaultSimpleConstants[i]);
+	}
+
+	fscanf(pFile, "\n", NULL);
+	// printf("\n");
+	double* shiftForSigmoidRight = malloc(numInputsRight * sizeof(double));
+	for (int i = 0; i < numInputsRight; ++i) {
+		fscanf(pFile, "%lf;\n", &shiftForSigmoidRight[i]);
+		// printf("%lf ", shiftForSigmoid[i]);
+	}
+
+	fscanf(pFile, "\n", NULL);
+	// printf("\n");
+	double* scaleForSigmoidRight = malloc(numInputsRight * sizeof(double));
+	for (int i = 0; i < numInputsRight; ++i) {
+		fscanf(pFile, "%lf;\n", &scaleForSigmoidRight[i]);
+		// printf("%lf ", scaleForSigmoid[i]);
+	}
+	fclose(pFile);
 
 	if (operation_mode == OPERATION_OPTB0) {
 
@@ -168,20 +196,20 @@ int main(int argc, char** argv) {
 
 		trainingData = initialiseDataSetFromFile(train_filename);
 
-		params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid, -1);
+		paramsRight = initialiseParameters(numInputsRight, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstantsRight, shiftForSigmoidRight, scaleForSigmoidRight, -1);
 
-		addNodeFunction(params, "add,sub,mul,div");
-		addCustomNodeFunction(params, hyperbola, "hyperbola", 1);
-		addCustomNodeFunction(params, linear, "linear", 1);
+		addNodeFunction(paramsRight, "add,sub,mul,div");
+		addCustomNodeFunction(paramsRight, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(paramsRight, linear, "linear", 1);
 
-		setTargetFitness(params, targetFitness);
+		setTargetFitness(paramsRight, targetFitness);
 
-		setUpdateFrequency(params, updateFrequency);
+		setUpdateFrequency(paramsRight, updateFrequency);
 
-		printParameters(params);
+		printParameters(paramsRight);
 
 		for (int i = 0; i < numLevels; i++) {
-			chromo = runCGP(params, trainingData, numGens);
+			chromo = runCGP(paramsRight, trainingData, numGens);
 		
 			printChromosome(chromo, 0);
 
@@ -195,12 +223,12 @@ int main(int argc, char** argv) {
 			saveChromosome(chromo, chromo_filename);
 			saveChromosomeLatex(chromo, 0, latex_filename);
 
-			UpdateDataSet(params, chromo, trainingData, levelCoeff);
+			UpdateDataSet(paramsRight, chromo, trainingData, levelCoeff);
 
 			freeChromosome(chromo);
 		}
 
-		freeParameters(params);
+		freeParameters(paramsRight);
 		freeDataSet(trainingData);
 	}
 
@@ -230,21 +258,28 @@ int main(int argc, char** argv) {
 		trainingData_left = initialiseDataSetFromFile(train_filename_left);
 		trainingData_right = initialiseDataSetFromFile(train_filename_right);
 
-		params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid, -1);
-
-		addNodeFunction(params, "add,sub,mul,div");
-		addCustomNodeFunction(params, hyperbola, "hyperbola", 1);
-		addCustomNodeFunction(params, linear, "linear", 1);
-
-		setTargetFitness(params, targetFitness);
-
-		setUpdateFrequency(params, updateFrequency);
-
-		printParameters(params);
-
-		chromo = runCGP(params, trainingData, numGens);
+		paramsLeft = initialiseParameters(numInputsLeft, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstantsLeft, shiftForSigmoidLeft, scaleForSigmoidLeft, -1);
+		paramsRight = initialiseParameters(numInputsRight, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstantsRight, shiftForSigmoidRight, scaleForSigmoidRight, -1);
 		
-		printChromosome(chromo, 0);
+		addNodeFunction(paramsLeft, "add,sub,mul,div");
+		addCustomNodeFunction(paramsLeft, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(paramsLeft, linear, "linear", 1);
+
+		addNodeFunction(paramsRight, "add,sub,mul,div");
+		addCustomNodeFunction(paramsRight, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(paramsRight, linear, "linear", 1);
+
+		setTargetFitness(paramsLeft, targetFitness);
+		setUpdateFrequency(paramsLeft, updateFrequency);
+		printParameters(paramsLeft);
+
+		setTargetFitness(paramsRight, targetFitness);
+		setUpdateFrequency(paramsRight, updateFrequency);
+		printParameters(paramsRight);
+
+		chromo = runCGP(paramsRight, trainingData_right, numGens);
+		
+		// printChromosome(chromo, 0);
 
 		char const_filename[100];
 		char chromo_filename[100];
@@ -261,42 +296,55 @@ int main(int argc, char** argv) {
 		double* errors_chromo_left = (double*)calloc(getDataSetNumSamples(trainingData_left), sizeof(double));
 		double* errors_chromo_right = (double*)calloc(getDataSetNumSamples(trainingData_right), sizeof(double));
 
-		getResult(trainingData_right, errors_chromo, chromo, levelCoeff);
+		getResult(trainingData_right, errors_chromo, chromo, 1);
 
-		updateDataSetOutput(trainingData_left, errors_chromo, 1);
-		updateDataSetOutput(trainingData_right, errors_chromo, 1);
+		updateDataSetOutput(trainingData_left, errors_chromo, levelCoeff);
+		updateDataSetOutput(trainingData_right, errors_chromo, levelCoeff);
+
+		// printChromosome(chromo, 0);
 
 		freeChromosome(chromo);
 
-		setUserData(params, (void*)errors_chromo);
+		setUserData(paramsLeft, (void*)errors_chromo);
+		setCustomFitnessFunction(paramsLeft, supervisedLearningUserData, "supervisedLearningUserData");
 
-		setCustomFitnessFunction(params, supervisedLearningUserData, "supervisedLearningUserData");
+		setUserData(paramsRight, (void*)errors_chromo);
+		setCustomFitnessFunction(paramsRight, supervisedLearningUserData, "supervisedLearningUserData");
 
 		for (i = 1; i < numLevels; i++) {
+
 			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
 				errors_chromo[j] = 1.0;
 				errors_chromo_left[j] = 1.0;
 				errors_chromo_right[j] = 1.0;
 			}
-			chromo_left = initialiseChromosome(params);
-			chromo_right = initialiseChromosome(params);
+			chromo_left = initialiseChromosome(paramsLeft);
+			chromo_right = initialiseChromosome(paramsRight);
 
-			for (int k = 0; k < numGens / numGensInt; k++) {
-				chromo_left = rerunCGP(params, trainingData_left, numGensInt, chromo_left);
-				getResult(trainingData_left, errors_chromo_left, chromo_left, levelCoeff);
+			int numIter = numGens / numGensInt;
+			for (int k = 0; k < numIter; k++) {
+				fprintf(stdout, "numLevel: %d of %d; ", i, numLevels);
+				fprintf(stdout, "iter: %d of %d; left ", k, numIter);
+				chromo_left = rerunCGP(paramsLeft, trainingData_left, numGensInt, chromo_left);
+				getResult(trainingData_left, errors_chromo_left, chromo_left, 1);
 				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
+					errors_chromo[j] = errors_chromo_left[j];
 				}
-				chromo_right = rerunCGP(params, trainingData_right, numGensInt, chromo_right);
-				getResult(trainingData_right, errors_chromo_right, chromo_right, levelCoeff);
+				fprintf(stdout, "numLevel: %d of %d; ", i, numLevels);
+				fprintf(stdout, "iter: %d of %d; right ", k, numIter);
+				chromo_right = rerunCGP(paramsRight, trainingData_right, numGensInt, chromo_right);
+				getResult(trainingData_right, errors_chromo_right, chromo_right, 1);
 				for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-					errors_chromo[j] = errors_chromo_left[j] * errors_chromo_right[j];
+					errors_chromo[j] = errors_chromo_right[j];
 				}
+			}
+			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
+				errors_chromo[j] = levelCoeff * errors_chromo_left[j] * errors_chromo_right[j];
 			}
 			updateDataSetOutput(trainingData_left, errors_chromo, 1);
 			updateDataSetOutput(trainingData_right, errors_chromo, 1);
 			
-			printChromosome(chromo_left, 0);
+			// printChromosome(chromo_left, 0);
 
 			snprintf(const_filename, 100, "%s_const_left%02d.txt",train_filename_left, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_left%02d.chromo", train_filename_left, i+1);
@@ -305,7 +353,7 @@ int main(int argc, char** argv) {
 			saveChromosome(chromo_left, chromo_filename);
 			saveChromosomeLatex(chromo_left, 0, latex_filename);
 
-			printChromosome(chromo_right, 0);
+			// printChromosome(chromo_right, 0);
 
 			snprintf(const_filename, 100, "%s_const_right%02d.txt",train_filename_right, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_right%02d.chromo", train_filename_right, i+1);
@@ -318,7 +366,8 @@ int main(int argc, char** argv) {
 			freeChromosome(chromo_right);
 		}
 
-		freeParameters(params);
+		freeParameters(paramsLeft);
+		freeParameters(paramsRight);
 		freeDataSet(trainingData_left);
 		freeDataSet(trainingData_right);
 	}
@@ -349,17 +398,24 @@ int main(int argc, char** argv) {
 		trainingData_left = initialiseDataSetFromFile(train_filename_left);
 		trainingData_right = initialiseDataSetFromFile(train_filename_right);
 
-		params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid, -1);
+		paramsLeft = initialiseParameters(numInputsLeft, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstantsLeft, shiftForSigmoidLeft, scaleForSigmoidLeft, -1);
+		paramsRight = initialiseParameters(numInputsRight, numNodes, numOutputs, nodeArity, maxMutationConst, defaultSimpleConstantsRight, shiftForSigmoidRight, scaleForSigmoidRight, -1);
 
-		addNodeFunction(params, "add,sub,mul,div");
-		addCustomNodeFunction(params, hyperbola, "hyperbola", 1);
-		addCustomNodeFunction(params, linear, "linear", 1);
+		addNodeFunction(paramsLeft, "add,sub,mul,div");
+		addCustomNodeFunction(paramsLeft, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(paramsLeft, linear, "linear", 1);
 
-		setTargetFitness(params, targetFitness);
+		addNodeFunction(paramsRight, "add,sub,mul,div");
+		addCustomNodeFunction(paramsRight, hyperbola, "hyperbola", 1);
+		addCustomNodeFunction(paramsRight, linear, "linear", 1);
 
-		setUpdateFrequency(params, updateFrequency);
+		setTargetFitness(paramsLeft, targetFitness);
+		setUpdateFrequency(paramsLeft, updateFrequency);
+		// printParameters(paramsLeft);
 
-		printParameters(params);
+		setTargetFitness(paramsRight, targetFitness);
+		setUpdateFrequency(paramsRight, updateFrequency);
+		// printParameters(paramsRight);
 
 		char const_filename[100];
 		char chromo_filename[100];
@@ -369,10 +425,10 @@ int main(int argc, char** argv) {
 		snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename_right, i);
 		snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename_right, i);
 
-		chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+		chromo = initialiseChromosomeFromFileWithUserFunctions(paramsRight, chromo_filename);
 		loadConstants(chromo, const_filename);
 		
-		printChromosome(chromo, 0);
+		// printChromosome(chromo, 0);
 
 		double* errors_chromo = (double*)calloc(getDataSetNumSamples(trainingData_right), sizeof(double));
 		double* errors_chromo_left = (double*)calloc(getDataSetNumSamples(trainingData_left), sizeof(double));
@@ -380,39 +436,37 @@ int main(int argc, char** argv) {
 
 		getResult(trainingData_right, errors_chromo, chromo, levelCoeff);
 
-		updateDataSetOutput(trainingData_left, errors_chromo, 1);
-		updateDataSetOutput(trainingData_right, errors_chromo, 1);
+		// updateDataSetOutput(trainingData_left, errors_chromo, 1);
+		// updateDataSetOutput(trainingData_right, errors_chromo, 1);
 
 		freeChromosome(chromo);
 
 		for (i = 1; i < numLevels; i++) {
-			chromo_left = initialiseChromosome(params);
-			chromo_right = initialiseChromosome(params);
 
 			snprintf(const_filename, 100, "%s_const_left%02d.txt",train_filename_left, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_left%02d.chromo", train_filename_left, i+1);
 			snprintf(latex_filename, 100, "%s_latex_left%02d.tex", train_filename_left, i+1);
 
-			chromo_left = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			chromo_left = initialiseChromosomeFromFileWithUserFunctions(paramsLeft, chromo_filename);
 			loadConstants(chromo_left, const_filename);
 
-			printChromosome(chromo_left, 0);
+			// printChromosome(chromo_left, 0);
 
-			getResult(trainingData_left, errors_chromo_left, chromo_left, levelCoeff);
+			getResult(trainingData_left, errors_chromo_left, chromo_left, 1);
 
 			snprintf(const_filename, 100, "%s_const_right%02d.txt",train_filename_right, i+1);
 			snprintf(chromo_filename, 100, "%s_chromo_right%02d.chromo", train_filename_right, i+1);
 			snprintf(latex_filename, 100, "%s_latex_right%02d.tex", train_filename_right, i+1);
 
-			chromo_right = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			chromo_right = initialiseChromosomeFromFileWithUserFunctions(paramsRight, chromo_filename);
 			loadConstants(chromo_right, const_filename);
 
-			printChromosome(chromo_right, 0);
+			// printChromosome(chromo_right, 0);
 
-			getResult(trainingData_right, errors_chromo_right, chromo_right, levelCoeff);
+			getResult(trainingData_right, errors_chromo_right, chromo_right, 1);
 
 			for (int j = 0; j < getDataSetNumSamples(trainingData_right); j++) {
-				errors_chromo[j] += errors_chromo_left[j] * errors_chromo_right[j];
+				errors_chromo[j] += levelCoeff * errors_chromo_left[j] * errors_chromo_right[j];
 			}
 
 			freeChromosome(chromo_left);
@@ -423,7 +477,8 @@ int main(int argc, char** argv) {
 			fprintf(stdout,"%4d, %13.6lf, %13.6lf\n", j, errors_chromo[j], getDataSetSampleOutput(trainingData_right, j, 0));
 		}
 
-		freeParameters(params);
+		freeParameters(paramsLeft);
+		freeParameters(paramsRight);
 		freeDataSet(trainingData_left);
 		freeDataSet(trainingData_right);
 	}
@@ -456,7 +511,7 @@ int main(int argc, char** argv) {
 			snprintf(const_filename, 100, "%s_const%02d.txt", train_filename, i+1); 
 			snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename, i+1); 
 
-			chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstants, shiftForSigmoid, scaleForSigmoid);
+			chromo = initialiseChromosomeFromFile(chromo_filename, maxMutationConst, defaultSimpleConstantsRight, shiftForSigmoidRight, scaleForSigmoidRight);
 			loadConstants(chromo, const_filename);
 
 			getResult(data, errors, chromo, levelCoeff);

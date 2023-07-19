@@ -955,6 +955,8 @@ extern "C" {
 	*/
 	DLL_EXPORT struct chromosome* initialiseChromosomeFromFile(char const *file, double maxMutationConst, double* defaultSimpleConstants, double* shiftForSigmoid, double* scaleForSigmoid);
 
+	DLL_EXPORT struct chromosome* initialiseChromosomeFromFileWithUserFunctions(struct parameters *params, char const *file);
+
 	/*
 		Function: initialiseChromosomeFromChromosome
 
