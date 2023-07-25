@@ -76,7 +76,7 @@ double SS_res(double a[], int n)
 char usage_string[256]= \
 "Usage: cgpapp <mode> <parameters file>;\n" \ 
 "cgpapp 1 parameters.txt train_filename_left train_filename_right\n" \
-"cgpapp 3 parameters.txt test_filename_left test_filename_right 0 5\n";
+"cgpapp 3 parameters.txt test_filename_left_for_name test_filename_right_for_name train_filename_left train_filename_right\n";
 
 int main(int argc, char** argv) {
 
@@ -374,8 +374,12 @@ int main(int argc, char** argv) {
 
 	if (operation_mode == OPERATION_TEST) {
 
-		char* train_filename_left = NULL;
+		char* train_filename_left_for_name = NULL; /* the name to construct names*/
+		char* train_filename_right_for_name = NULL;
+
+		char* train_filename_left = NULL; /* the name to read data*/
 		char* train_filename_right = NULL;
+
 		char* test_filename = NULL;
 
 		char* output_chromo = NULL;
@@ -388,9 +392,11 @@ int main(int argc, char** argv) {
 		struct chromosome *chromo_left = NULL;
 		struct chromosome *chromo_right = NULL;
 
-		if (argc > 4) {
-			train_filename_left = argv[3];
-			train_filename_right = argv[4];
+		if (argc > 6) {
+			train_filename_left_for_name = argv[3];
+			train_filename_right_for_name = argv[4];
+			train_filename_left = argv[5];
+			train_filename_right = argv[6];
 		} else {
 			fprintf(stderr, "\n Incorrect input \n");
 		}
@@ -421,9 +427,9 @@ int main(int argc, char** argv) {
 		char chromo_filename[100];
 		char latex_filename[100];
 		int i = 0;
-		snprintf(const_filename, 100, "%s_const%02d.txt",train_filename_right, i);
-		snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename_right, i);
-		snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename_right, i);
+		snprintf(const_filename, 100, "%s_const%02d.txt",train_filename_right_for_name, i);
+		snprintf(chromo_filename, 100, "%s_chromo%02d.chromo", train_filename_right_for_name, i);
+		snprintf(latex_filename, 100, "%s_latex%02d.tex", train_filename_right_for_name, i);
 
 		chromo = initialiseChromosomeFromFileWithUserFunctions(paramsRight, chromo_filename);
 		loadConstants(chromo, const_filename);
@@ -443,9 +449,9 @@ int main(int argc, char** argv) {
 
 		for (i = 1; i < numLevels; i++) {
 
-			snprintf(const_filename, 100, "%s_const_left%02d.txt",train_filename_left, i+1);
-			snprintf(chromo_filename, 100, "%s_chromo_left%02d.chromo", train_filename_left, i+1);
-			snprintf(latex_filename, 100, "%s_latex_left%02d.tex", train_filename_left, i+1);
+			snprintf(const_filename, 100, "%s_const_left%02d.txt",train_filename_left_for_name, i+1);
+			snprintf(chromo_filename, 100, "%s_chromo_left%02d.chromo", train_filename_left_for_name, i+1);
+			snprintf(latex_filename, 100, "%s_latex_left%02d.tex", train_filename_left_for_name, i+1);
 
 			chromo_left = initialiseChromosomeFromFileWithUserFunctions(paramsLeft, chromo_filename);
 			loadConstants(chromo_left, const_filename);
@@ -454,9 +460,9 @@ int main(int argc, char** argv) {
 
 			getResult(trainingData_left, errors_chromo_left, chromo_left, 1);
 
-			snprintf(const_filename, 100, "%s_const_right%02d.txt",train_filename_right, i+1);
-			snprintf(chromo_filename, 100, "%s_chromo_right%02d.chromo", train_filename_right, i+1);
-			snprintf(latex_filename, 100, "%s_latex_right%02d.tex", train_filename_right, i+1);
+			snprintf(const_filename, 100, "%s_const_right%02d.txt",train_filename_right_for_name, i+1);
+			snprintf(chromo_filename, 100, "%s_chromo_right%02d.chromo", train_filename_right_for_name, i+1);
+			snprintf(latex_filename, 100, "%s_latex_right%02d.tex", train_filename_right_for_name, i+1);
 
 			chromo_right = initialiseChromosomeFromFileWithUserFunctions(paramsRight, chromo_filename);
 			loadConstants(chromo_right, const_filename);
